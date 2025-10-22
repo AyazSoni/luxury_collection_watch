@@ -6,13 +6,13 @@ import { getAuth } from "firebase/auth";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyAdfTKSzfsswSgU7SbYRF4m4M2RzShXX5c",
-  authDomain: "zara-furniture.firebaseapp.com",
-  projectId: "zara-furniture",
-  storageBucket: "zara-furniture.appspot.com",
-  messagingSenderId: "368475642799",
-  appId: "1:368475642799:web:267dfc6f11a920cc4d6d5a",
-  measurementId: "G-G9VV82R01X"
+  apiKey: "AIzaSyBVWSp45Rv9CJci-2roMOLvKIApmuSywNs",
+  authDomain: "luxury-collections.firebaseapp.com",
+  projectId: "luxury-collections",
+  storageBucket: "luxury-collections.firebasestorage.app",
+  messagingSenderId: "660270255656",
+  appId: "1:660270255656:web:b415ef78524940b6726f1d",
+  measurementId: "G-1L2EGPQ97C"
 };
 
 // Initialize Firebase

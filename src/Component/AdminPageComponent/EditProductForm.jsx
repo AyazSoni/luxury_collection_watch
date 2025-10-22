@@ -16,9 +16,6 @@ const EditProductForm = ({ product, onBack }) => {
     category: '',
     name: '',
     description: '',
-    dimensions: '',
-    warranty: '',
-    primaryMaterial: '',
     price: '',
     images: []
   });
@@ -137,9 +134,7 @@ const EditProductForm = ({ product, onBack }) => {
             className="mt-1 block w-full border border-gray-300 bg-white rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-2"
           >
             <option value="" disabled>Select a category</option>
-            {['BEDROOM SET', 'WARDROBE & BED', 'SOFASET', 'SOFACOMEBED',
-              'METAL WARDROBE AND METALBED', 'SHOE RACK', 'TV UNIT',
-              'MULTIPURPOSE TABLES', 'SINGLE BED', 'SIDEBOX'].map((category, index) => (
+            {["Men's Watches", "Women's Watches", "Glasses and Trending"].map((category, index) => (
               <option key={index} value={category}>{category}</option>
             ))}
           </select>
@@ -158,50 +153,14 @@ const EditProductForm = ({ product, onBack }) => {
         </div>
 
         <div>
-          <label className="block text-lg font-medium text-gray-700">Product Description</label>
+          <label className="block text-lg font-medium text-gray-700">Product Description <span className="text-gray-500 text-sm">(Optional)</span></label>
           <textarea
             name="description"
             value={formData.description}
             onChange={handleChange}
             className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-2"
-            placeholder="Product Description"
+            placeholder="Product Description (Optional)"
           ></textarea>
-        </div>
-
-        <div>
-          <label className="block text-lg font-medium text-gray-700">Product Dimensions</label>
-          <input
-            type="text"
-            name="dimensions"
-            value={formData.dimensions}
-            onChange={handleChange}
-            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-2"
-            placeholder="Product Dimensions"
-          />
-        </div>
-
-        <div>
-          <label className="block text-lg font-medium text-gray-700">Product Warranty</label>
-          <input
-            type="text"
-            name="warranty"
-            value={formData.warranty}
-            onChange={handleChange}
-            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-2"
-            placeholder="Product Warranty"
-          />
-        </div>
-
-        <div>
-          <label className="block text-lg font-medium text-gray-700">Primary Material</label>
-          <input
-            type="text"
-            name="primaryMaterial"
-            value={formData.primaryMaterial}
-            onChange={handleChange}
-            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-2"
-            placeholder="Primary Material"
-          />
         </div>
 
         <div>

@@ -23,18 +23,9 @@ export const ProductProvider = ({ children }) => {
   const [fetchedCategories, setFetchedCategories] = useState({
     'latest': false,
     'all': false,
-    'SOFASET': false,
-    'BEDROOM SET': false,
-    'TV UNIT': false,
-    'MULTIPURPOSE TABLES': false,
-    'SIDEBOX': false,
-    'SINGLE BED': false,
-    'LAUNGER SOFA': false,
-    '3+2 SOFA': false,
-    'SOFACOMEBED': false,
-    'WARDROBE & BED': false,
-    'METAL WARDROBE AND METALBED': false,
-    'SHOE RACK': false
+    "Men's Watches": false,
+    "Women's Watches": false,
+    "Glasses and Trending": false
   });
 
   /**
