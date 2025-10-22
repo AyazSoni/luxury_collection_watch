@@ -7,7 +7,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const ProductList = ({onEdit}) => {
-  const { products, loading, error, hasMore, fetchProducts, getProductsByCategory, fetchedCategories } = useProduct();
+  const { products, loading, error, hasMore, fetchProducts, getProductsByCategory, fetchedCategories, refreshProducts } = useProduct();
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [showDialog, setShowDialog] = useState(false);
   const [productToDelete, setProductToDelete] = useState(null);
@@ -16,16 +16,9 @@ const ProductList = ({onEdit}) => {
   const navigate = useNavigate();
 
   const categories = [
-    'BEDROOM SET',
-    'WARDROBE & BED',
-    'SOFASET',
-    'SOFACOMEBED',
-    'METAL WARDROBE AND METALBED',
-    'SHOE RACK',
-    'TV UNIT',
-    'MULTIPURPOSE TABLES',
-    'SINGLE BED',
-    'SIDEBOX'
+    'men',
+    'women',
+    'glasses'
   ];
 
   const addProduct = () => {
@@ -74,8 +67,11 @@ const ProductList = ({onEdit}) => {
     setShowDialog(false);
     try {
       await deleteProductFromFirebase(productToDelete.id, productToDelete.images);
+      
+      // Refresh products to remove the deleted product
+      await refreshProducts('latest');
+      
       toast.success("Successfully deleted");
-      // Note: You might want to add a refresh mechanism here or update the context
     } catch (err) {
       toast.error(err.message);
     } finally {

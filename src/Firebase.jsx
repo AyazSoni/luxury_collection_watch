@@ -1,7 +1,7 @@
 import { initializeApp } from "firebase/app";
-import { getStorage, ref, uploadBytesResumable, getDownloadURL , deleteObject} from "firebase/storage";
 import { getFirestore, collection, addDoc , getDocs , doc , deleteDoc , updateDoc , orderBy, query, where, limit, startAfter} from "firebase/firestore";
 import { getAuth } from "firebase/auth";
+import { uploadFileToSupabase, deleteFileFromSupabase, uploadBannerToSupabase, getCurrentBannerFromSupabase, deleteCurrentBannerFromSupabase } from './Supabase.jsx';
 
 
 // Your web app's Firebase configuration
@@ -17,7 +17,6 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const storage = getStorage(app);
 const firestore = getFirestore(app);
 
 const auth = getAuth(app);
@@ -34,10 +33,9 @@ export const addProductToFirebase = async (productData) => {
 export const deleteProductFromFirebase = async (productId, images) => {
   try {
     if (images && images.length > 0) {
-      // Create an array of deletion promises
+      // Create an array of deletion promises using Supabase
       const deletionPromises = images.map((imageUrl) => {
-        const imageRef = ref(storage, imageUrl);
-        return deleteObject(imageRef); // Returns a promise
+        return deleteFileFromSupabase(imageUrl);
       });
 
       // Wait until all deletion promises are resolved
@@ -118,40 +116,18 @@ export const updateProductInFirestore = async (productId, updatedData) => {
 
 
 
-//image 
+//image functions using Supabase
 export const deleteImageFromStorage = async (imageUrl) => {
   try {
-    const imageRef = ref(storage, imageUrl);
-    await deleteObject(imageRef);
+    await deleteFileFromSupabase(imageUrl);
   } catch (error) {
     throw new Error("Failed to delete image: " + error.message);
   }
-};export const uploadImageToStorage = async (file, progressCallback) => {
-  try {
-    const storageRef = ref(storage, 'products/' + file.name);
-    const uploadTask = uploadBytesResumable(storageRef, file);
+};
 
-    return new Promise((resolve, reject) => {
-      uploadTask.on(
-        "state_changed",
-        (snapshot) => {
-          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          console.log("Upload progress:", progress + "%");
-          progressCallback(progress);  // Update progress state
-        },
-        (error) => {
-          reject("Failed to upload image: " + error.message);
-        },
-        async () => {
-          try {
-            const url = await getDownloadURL(uploadTask.snapshot.ref);
-            resolve(url);
-          } catch (error) {
-            reject("Failed to get download URL: " + error.message);
-          }
-        }
-      );
-    });
+export const uploadImageToStorage = async (file, progressCallback, productData = null) => {
+  try {
+    return await uploadFileToSupabase(file, progressCallback, productData);
   } catch (error) {
     throw new Error("Failed to upload image: " + error.message);
   }
@@ -161,34 +137,28 @@ export const deleteImageFromStorage = async (imageUrl) => {
 
 
 
-//banner
-const BANNER_PATH = 'banners/banner.jpg';
-
+//banner functions using Supabase
 export const uploadBanner = async (file) => {
   try {
-    const bannerRef = ref(storage, BANNER_PATH);
-    await uploadBytesResumable(bannerRef, file);
-    const downloadURL = await getDownloadURL(bannerRef);
-    return downloadURL;
+    return await uploadBannerToSupabase(file);
   } catch (error) {
     console.error('Error uploading banner:', error);
     throw error;
   }
 };
+
 export const getCurrentBannerURL = async () => {
   try {
-    const bannerRef = ref(storage, BANNER_PATH);
-    const downloadURL = await getDownloadURL(bannerRef);
-    return downloadURL;
+    return await getCurrentBannerFromSupabase();
   } catch (error) {
     console.error('Error fetching current banner:', error);
     return null;
   }
 };
+
 export const deleteCurrentBanner = async () => {
   try {
-    const bannerRef = ref(storage, BANNER_PATH);
-    await deleteObject(bannerRef);
+    await deleteCurrentBannerFromSupabase();
   } catch (error) {
     console.error('Error deleting current banner:', error);
   }

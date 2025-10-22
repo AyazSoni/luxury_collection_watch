@@ -3,20 +3,26 @@ import { FaArrowLeft, FaSpinner } from "react-icons/fa";
 import { IoMdClose } from "react-icons/io";
 import { useNavigate } from 'react-router-dom';
 import { uploadImageToStorage, addProductToFirebase, deleteImageFromStorage } from '../../Firebase.jsx';
+import { useProduct } from '../../context/ProductProvider.jsx';
 
 const AddProductForm = () => {
   const categories = [
-    "Men's Watches", "Women's Watches", "Glasses and Trending"
+    { value: "men", label: "Men" },
+    { value: "women", label: "Women" },
+    { value: "glasses", label: "Glasses" }
   ];
 
   const navigate = useNavigate();
+  const { refreshProducts } = useProduct();
 
   const initialProductState = {
-    category: '',
+    category: 'men', // Default to men
     name: '',
     description: '',
     price: '',
     images: [] ,
+    selectedFiles: [], // Store selected files temporarily
+    trending: false,
     createdAt: new Date()
   };
 
@@ -33,40 +39,20 @@ const AddProductForm = () => {
     });
   };
 
-  const handleImageUpload = async (e) => {
-    setLoading(true);
-    try {
-      const files = Array.from(e.target.files);
-      const imageUrls = await Promise.all(files.map(file => uploadImageToStorage(file, setUploadProgress)));
-      setProduct({
-        ...product,
-        images: [...product.images, ...imageUrls]
-      });
-    } catch (err) {
-      setError('Failed to upload image. Please try again.');
-      console.error(err);
-    } finally {
-      setLoading(false);
-      setUploadProgress(0);  // Reset progress after upload is done
-    }
+  const handleImageSelection = (e) => {
+    const files = Array.from(e.target.files);
+    setProduct({
+      ...product,
+      selectedFiles: [...product.selectedFiles, ...files]
+    });
   };
 
-  const handleImageDelete = async (index) => {
-    setLoading(true);
-    try {
-      const imageUrl = product.images[index];
-      await deleteImageFromStorage(imageUrl);
-      const updatedImages = product.images.filter((_, i) => i !== index);
-      setProduct({
-        ...product,
-        images: updatedImages
-      });
-    } catch (err) {
-      setError('Failed to delete image. Please try again.');
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
+  const handleImageDelete = (index) => {
+    const updatedFiles = product.selectedFiles.filter((_, i) => i !== index);
+    setProduct({
+      ...product,
+      selectedFiles: updatedFiles
+    });
   };
 
   const handleSubmit = async (e) => {
@@ -74,8 +60,45 @@ const AddProductForm = () => {
     setLoading(true);
     setError(null);
 
+    // Validation: Check required fields
+    if (!product.name.trim()) {
+      setError('Product name is required.');
+      setLoading(false);
+      return;
+    }
+
+    if (!product.price.trim()) {
+      setError('Product price is required.');
+      setLoading(false);
+      return;
+    }
+
+    if (product.selectedFiles.length === 0) {
+      setError('At least one product image is required.');
+      setLoading(false);
+      return;
+    }
+
     try {
-      await addProductToFirebase(product);
+      // Upload images first
+      const imageUrls = await Promise.all(
+        product.selectedFiles.map(file => uploadImageToStorage(file, setUploadProgress, product))
+      );
+      
+      // Create product data with uploaded image URLs
+      const productData = {
+        ...product,
+        images: imageUrls
+      };
+      
+      // Remove selectedFiles from the data before saving
+      delete productData.selectedFiles;
+      
+      await addProductToFirebase(productData);
+      
+      // Refresh products to show the new product
+      await refreshProducts('latest');
+      
       setSuccess(true);
       setProduct(initialProductState);
     } catch (err) {
@@ -83,6 +106,7 @@ const AddProductForm = () => {
       console.error(err);
     } finally {
       setLoading(false);
+      setUploadProgress(0);
     }
   };
 
@@ -96,7 +120,13 @@ const AddProductForm = () => {
           <button onClick={goBack}>
             <FaArrowLeft className="text-2xl text-black absolute z-10 translate-y-[-25px]" />
           </button>
-          <h1 className="text-2xl font-bold text-center mb-6 mt-4">Add Product in Your <span className="thick-font text-3xl whitespace-nowrap text-customGreen">Zara Furniture</span> Shop</h1>
+          <h1 className="text-2xl font-bold text-center mb-6 mt-4">Add Product in Your <span className="thick-font text-3xl whitespace-nowrap text-customGreen">Luxury Collection</span> Shop</h1>
+          
+          {error && (
+            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+              {error}
+            </div>
+          )}
 
          {loading && uploadProgress > 0 && (
         <div className="w-full bg-gray-200 rounded-full h-6 mb-4">
@@ -105,49 +135,60 @@ const AddProductForm = () => {
           </div>
         </div>
       )}
-          <div className="flex items-center mb-6">
-            <div className="grid grid-cols-2 gap-x-[10px] gap-y-2 md:grid-cols-5">
-              {product.images.map((image, index) => (
-                <div key={index} className="relative w-20 h-20 md:w-24 md:h-24">
-                    <>
-                      <img src={image} alt={`Product ${index}`} className="w-full h-full object-cover rounded-md" />
-                      <button
-                        type="button"
-                        className="absolute top-0 right-0 bg-red-500 text-white rounded-full p-0.5 text-[12px] m-1"
-                        onClick={() => handleImageDelete(index)}
-                      >
-                        <IoMdClose />
-                      </button>
-                    </>
-                  
-                </div>
-              ))}
+          <div className="mb-6">
+            <label className="block text-lg font-medium text-gray-700 mb-3">Product Images <span className="text-red-500">*</span></label>
+            <div className="flex items-center">
+              <div className="grid grid-cols-2 gap-x-[10px] gap-y-2 md:grid-cols-5">
+                {product.selectedFiles.map((file, index) => (
+                  <div key={index} className="relative w-20 h-20 md:w-24 md:h-24">
+                    <img 
+                      src={URL.createObjectURL(file)} 
+                      alt={`Selected ${index + 1}`} 
+                      className="w-full h-full object-cover rounded-md" 
+                    />
+                    <button
+                      type="button"
+                      className="absolute top-0 right-0 bg-red-500 text-white rounded-full p-0.5 text-[12px] m-1"
+                      onClick={() => handleImageDelete(index)}
+                    >
+                      <IoMdClose />
+                    </button>
+                  </div>
+                ))}
+              </div>
+              <label className="flex flex-col items-center justify-center w-24 h-24 bg-gray-100 text-gray-700 border-2 border-dashed border-gray-300 rounded-md cursor-pointer hover:bg-gray-200 m-2 min-w-24">
+                <span className="text-xl thick-font">+</span>
+                <span className="text-sm thick-font">Add Image</span>
+                <input type="file" multiple onChange={handleImageSelection} className="hidden" />
+              </label>
             </div>
-            <label className="flex flex-col items-center justify-center w-24 h-24 bg-gray-100 text-gray-700 border-2 border-dashed border-gray-300 rounded-md cursor-pointer hover:bg-gray-200 m-2 min-w-24">
-              <span className="text-xl thick-font">+</span>
-              <span className="text-sm thick-font">Add Image</span>
-              <input type="file" multiple onChange={handleImageUpload} className="hidden" />
-            </label>
+            {product.selectedFiles.length === 0 && (
+              <p className="text-sm text-red-500 mt-2">At least one image is required</p>
+            )}
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label className="block text-lg font-medium text-gray-700">Category</label>
-              <select
-                name="category"
-                value={product.category}
-                onChange={handleChange}
-                className="mt-1 block w-full border border-gray-300 bg-white rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-2"
-              >
-                <option value="" disabled>Select a category</option>
+              <label className="block text-lg font-medium text-gray-700 mb-3">Category</label>
+              <div className="space-y-2">
                 {categories.map((category, index) => (
-                  <option key={index} value={category}>{category}</option>
+                  <label key={index} className="flex items-center">
+                    <input
+                      type="radio"
+                      name="category"
+                      value={category.value}
+                      checked={product.category === category.value}
+                      onChange={handleChange}
+                      className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300"
+                    />
+                    <span className="ml-2 text-sm font-medium text-gray-700">{category.label}</span>
+                  </label>
                 ))}
-              </select>
+              </div>
             </div>
 
             <div>
-              <label className="block text-lg font-medium text-gray-700">Product Name</label>
+              <label className="block text-lg font-medium text-gray-700">Product Name <span className="text-red-500">*</span></label>
               <input
                 type="text"
                 name="name"
@@ -155,6 +196,7 @@ const AddProductForm = () => {
                 onChange={handleChange}
                 className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-2"
                 placeholder="Product Name"
+                required
               />
             </div>
 
@@ -170,7 +212,7 @@ const AddProductForm = () => {
             </div>
 
             <div>
-              <label className="block text-lg font-medium text-gray-700">Price</label>
+              <label className="block text-lg font-medium text-gray-700">Price <span className="text-red-500">*</span></label>
               <input
                 type="text"
                 name="price"
@@ -178,17 +220,41 @@ const AddProductForm = () => {
                 onChange={handleChange}
                 className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-2"
                 placeholder="Price"
+                required
               />
+            </div>
+
+            <div className="flex items-center">
+              <input
+                type="checkbox"
+                name="trending"
+                checked={product.trending}
+                onChange={(e) => setProduct({
+                  ...product,
+                  trending: e.target.checked
+                })}
+                className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+              />
+              <label className="ml-2 block text-lg font-medium text-gray-700">
+                Mark as Trending
+              </label>
             </div>
 
             <div className="text-center">
               <button
                 type="submit"
-                className="w-full bg-indigo-500 text-white py-2 px-4 rounded-md shadow-md hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50"
-                disabled={loading}
+                className={`w-full py-2 px-4 rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-opacity-50 ${
+                  product.name.trim() && product.price.trim() && product.selectedFiles.length > 0
+                    ? 'bg-indigo-500 text-white hover:bg-indigo-600 focus:ring-indigo-500'
+                    : 'bg-gray-400 text-gray-200 cursor-not-allowed'
+                }`}
+                disabled={loading || !product.name.trim() || !product.price.trim() || product.selectedFiles.length === 0}
               >
                 {loading ? <FaSpinner className="animate-spin mx-auto" /> : 'Add Product'}
               </button>
+              {(!product.name.trim() || !product.price.trim() || product.selectedFiles.length === 0) && (
+                <p className="text-sm text-gray-500 mt-2">Please fill all required fields to add product</p>
+              )}
             </div>
           </form>
         </div>

@@ -23,9 +23,10 @@ export const ProductProvider = ({ children }) => {
   const [fetchedCategories, setFetchedCategories] = useState({
     'latest': false,
     'all': false,
-    "Men's Watches": false,
-    "Women's Watches": false,
-    "Glasses and Trending": false
+    "men": false,
+    "women": false,
+    "glasses": false,
+    "trending": false
   });
 
   /**
@@ -149,6 +150,57 @@ export const ProductProvider = ({ children }) => {
       .slice(0, 3);
   }, [products, loading]);
 
+  /**
+   * Get trending products
+   * @returns {Array} Array of trending products
+   */
+  const getTrendingProducts = useCallback(() => {
+    if (loading || !products.length) {
+      return [];
+    }
+
+    return products.filter(product => product.trending === true);
+  }, [products, loading]);
+
+  /**
+   * Refresh products by clearing cache and refetching
+   * @param {string} category - Category to refresh (default: "latest")
+   */
+  const refreshProducts = useCallback(async (category = "latest") => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      // Clear existing products and pagination state
+      setProducts([]);
+      setLastDocs({});
+      setHasMore({});
+      setFetchedCategories({
+        'latest': false,
+        'all': false,
+        "men": false,
+        "women": false,
+        "glasses": false,
+        "trending": false
+      });
+
+      // Fetch fresh products
+      const { products: newProducts, lastDoc: newLastDoc, hasMore: more } =
+        await fetchProductsFromFirestore(category, null);
+
+      setProducts(newProducts);
+      setLastDocs({ [category]: newLastDoc });
+      setHasMore({ [category]: more });
+      setFetchedCategories(prev => ({ ...prev, [category]: true }));
+
+      setLoading(false);
+    } catch (err) {
+      console.error('Error refreshing products:', err);
+      setError(err.message);
+      setLoading(false);
+    }
+  }, []);
+
 
 
   // Fetch "latest" products when provider first mounts
@@ -170,12 +222,14 @@ export const ProductProvider = ({ children }) => {
     fetchedCategories,
     // Actions
     fetchProducts,
+    refreshProducts,
     
     // Helper functions
     getProductsByCategory,
     getProductById,
     getProductWithSimilarCategory,
     getNewestProducts,
+    getTrendingProducts,
   };
 
   return (
