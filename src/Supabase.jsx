@@ -83,11 +83,12 @@ export const deleteFileFromSupabase = async (fileUrl) => {
     // We need to extract only the filepath after the bucket name
     // Example: /storage/v1/object/public/product/product/glasses_test4_793.png
     // We want only: product/glasses_test4_793.png (the last 2 parts)
-
+    const pathParts = url.pathname.split('/').filter(part => part !== '')
 
     // Take the last 2 parts (folder/filename)
     const filePath = pathParts.slice(-2).join('/')
-    
+    console.log('File path to delete:', filePath)
+
 
     const { data , error } = await supabase.storage
       .from(STORAGE_BUCKET)
