@@ -5,6 +5,7 @@ import { FaArrowLeft } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { uploadImageToStorage, deleteImageFromStorage, updateProductInFirestore } from '../../Firebase.jsx';
 import { useProduct } from '../../context/ProductProvider.jsx';
+import { validateAndCompressImages } from '../../utils/imageUtils.js';
 
 const EditProductForm = ({ product, onBack }) => {
   const [loading, setLoading] = useState(false);
@@ -53,12 +54,46 @@ const EditProductForm = ({ product, onBack }) => {
     onBack();
   };
 
-  const handleImageSelection = (e) => {
+  const handleImageSelection = async (e) => {
     const files = Array.from(e.target.files);
-    setFormData({
-      ...formData,
-      selectedFiles: [...(formData.selectedFiles || []), ...files]
-    });
+
+    if (files.length === 0) return;
+
+    // Show loading state
+    setLoading(true);
+    setError(null);
+
+    try {
+      // Validate and compress images
+      const { validFiles, errors } = await validateAndCompressImages(files);
+
+      // Show errors if any
+      if (errors.length > 0) {
+        setError(
+          <div>
+            <p className="font-semibold mb-2">Some images could not be added:</p>
+            <ul className="list-disc list-inside">
+              {errors.map((err, idx) => (
+                <li key={idx}>{err}</li>
+              ))}
+            </ul>
+          </div>
+        );
+      }
+
+      // Add valid files to the form data
+      if (validFiles.length > 0) {
+        setFormData({
+          ...formData,
+          selectedFiles: [...(formData.selectedFiles || []), ...validFiles]
+        });
+      }
+    } catch (err) {
+      setError('Failed to process images. Please try again.');
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleImageDelete = (index, isExistingImage = false) => {
