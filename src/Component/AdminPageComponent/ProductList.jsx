@@ -9,6 +9,7 @@ import 'react-toastify/dist/ReactToastify.css';
 const ProductList = ({onEdit}) => {
   const { products, loading, error, hasMore, fetchProducts, getProductsByCategory, fetchedCategories, refreshProducts } = useProduct();
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const [showTrendingOnly, setShowTrendingOnly] = useState(false);
   const [showDialog, setShowDialog] = useState(false);
   const [productToDelete, setProductToDelete] = useState(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
@@ -35,6 +36,10 @@ const ProductList = ({onEdit}) => {
     setSelectedCategory(null);
   };
 
+  const toggleTrendingFilter = () => {
+    setShowTrendingOnly(!showTrendingOnly);
+  };
+
   // Fetch products when component mounts or category changes
   useEffect(() => {
     const category = selectedCategory || "latest";
@@ -46,8 +51,15 @@ const ProductList = ({onEdit}) => {
 
   // Get products for the selected category using existing function
   const filteredProducts = useMemo(() => {
-    return getProductsByCategory(selectedCategory || "latest");
-  }, [products, selectedCategory, getProductsByCategory]);
+    let categoryProducts = getProductsByCategory(selectedCategory || "latest");
+
+    // Apply trending filter if enabled
+    if (showTrendingOnly) {
+      categoryProducts = categoryProducts.filter(product => product.trending === true);
+    }
+
+    return categoryProducts;
+  }, [products, selectedCategory, showTrendingOnly, getProductsByCategory]);
 
   // Load more products for current category
   const loadMoreProducts = () => {
@@ -92,17 +104,36 @@ const ProductList = ({onEdit}) => {
         </button>
       </div>
       <h1 className="text-3xl font-bold text-center mb-6 thick-font text-gray-700 my-4 md:text-5xl md:mb-12">Manage Your Product</h1>
-      <div className="flex overflow-x-auto mb-7 md:mb-12 p-1">
-        <button onClick={resetCategoryFilter} className={`bg-gray-400 hover:bg-gray-600 text-gray-800 font-bold py-[5px] px-3 rounded-2xl mr-2 transition duration-300 text-[13px] text-white ${selectedCategory === null && 'bg-gray-800'}`}>All</button>
+
+      {/* Category Filters */}
+      <div className="flex overflow-x-auto mb-4 md:mb-6 p-1">
+        <button onClick={resetCategoryFilter} className={`bg-gray-400 hover:bg-gray-600 font-bold py-[5px] px-3 rounded-2xl mr-2 transition duration-300 text-[13px] text-white ${selectedCategory === null && 'bg-gray-800'}`}>All</button>
         {categories.map((category, index) => (
           <button
             key={index}
             onClick={() => filterProductsByCategory(category)}
-            className={`bg-gray-400 hover:bg-gray-600 text-gray-800 font-bold py-[5px] px-3 text-white text-[13px] rounded-2xl mr-2 transition duration-300 whitespace-nowrap ${selectedCategory === category && 'bg-gray-800'}`}
+            className={`bg-gray-400 hover:bg-gray-600 font-bold py-[5px] px-3 text-white text-[13px] rounded-2xl mr-2 transition duration-300 whitespace-nowrap ${selectedCategory === category && 'bg-gray-800'}`}
           >
             {category}
           </button>
         ))}
+      </div>
+
+      {/* Trending Filter */}
+      <div className="flex items-center mb-7 md:mb-12 p-1">
+        <button
+          onClick={toggleTrendingFilter}
+          className={`font-bold py-[5px] px-4 rounded-2xl transition duration-300 text-[13px] flex items-center gap-2 ${
+            showTrendingOnly
+              ? 'bg-yellow-500 hover:bg-yellow-600 text-white'
+              : 'bg-gray-300 hover:bg-gray-400 text-gray-700'
+          }`}
+        >
+          <span className={showTrendingOnly ? 'text-lg' : ''}>
+            {showTrendingOnly ? '⭐' : '☆'}
+          </span>
+          {showTrendingOnly ? 'Trending Only' : 'Show Trending'}
+        </button>
       </div>
 
       {loading && products.length === 0 ? (
