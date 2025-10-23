@@ -42,7 +42,7 @@ const message = encodeURIComponent('Hi zara Furniture' ); // Optional message
   return (
     <footer className="bg-[#5a7f75] text-white py-4 px-4 flex flex-col  h-full gap-y-8 md:mt-10 mt-5 overflow-x-hidden md:pt-10 md:gap-y-10 ">
       <div className='font-bold text-2xl cursor-pointer flex items-center gap-1 w-full ml-3'>
-        <span className="text-2xl thick-font">Zara Furniture</span>
+        <span className="text-2xl thick-font">Luxury Collection</span>
       </div>
     <div className="flex flex-col gap-y-2">
       <div className="flex w-full justify-items-start flex flex-row gap-2 md:ml-5">
@@ -91,7 +91,7 @@ const message = encodeURIComponent('Hi zara Furniture' ); // Optional message
         </div>
      </div>
      <div className=" w-full text-[13px]  text-center pt-2 border-t-[1.5px] border-[#30574c] border-solid md:text-xl">
-        ©2024 Created by  <b> Zara Furniture</b>
+        ©2025 Created by  <b> Ayax Soni</b>
      </div>
     </footer>
   );

@@ -1,17 +1,47 @@
 import React, { useState, useEffect } from 'react';
-import sofaImg1 from "../Images/sofa.png.jpg";
-import sofaImg2 from "../Images/sofaImg2.png";
 import sofaImg3 from "../Images/sofa3.png.jpg";
-import sidebg from "../Images/sidebg.png";
 import { useNavigate } from 'react-router-dom';
+import { getCurrentBannerData } from '../Firebase';
 
 const SlideComponent1 = () => {
   const navigate = useNavigate();
   const [activeButton, setActiveButton] = useState(1); // State to track active button
   const [animate, setAnimate] = useState(true); // State to toggle animations
+  const [bannerData, setBannerData] = useState(null);
 
+  useEffect(() => {
+    const fetchBanner = async () => {
+      try {
+        const banner = await getCurrentBannerData();
+        setBannerData(banner);
+      } catch (error) {
+        console.error("Error fetching banner:", error);
+      }
+    };
+    fetchBanner();
+  }, []);
+
+  // Always show 3 slides regardless of banner loading
   const data = [
+    // Slide 1 - Banner slide (dynamically loaded from admin)
     {
+      type: "banner",
+      text: bannerData?.title || "Featured Product",
+      subText: "",
+      description: bannerData?.description || "Discover our exclusive collection",
+      bgImage: bannerData?.imageUrl || sofaImg3,
+      buttonText: "Shop Now",
+      navigateTo: () => {
+        if (bannerData?.productId) {
+          navigate(`/product/${bannerData.productId}`);
+        } else {
+          navigate('/ProductDisplay');
+        }
+      }
+    },
+    // Slide 2 - See Our Collection
+    {
+      type: "static",
       text: "OUR WOODEN CONCEPTS",
       subText: "Sustainable Furniture",
       description: "Since 2014, we have customized sofas, cupboards, beds, and multipurpose tables (dining, center, computer, TV units). Using the best quality materials at the lowest rates.",
@@ -20,24 +50,13 @@ const SlideComponent1 = () => {
       textColor: "text-gray-500",
       buttonColor: 'bg-customGreen',
       buttonTextColor: "text-white",
-      imageSrc: sofaImg1,
+      imageSrc: sofaImg3,
       buttonText: "see our collection",
       navigateTo: () => navigate('/ProductDisplay')
     },
+    // Slide 3 - About Us slide
     {
-      text: "OUR LOCATIONS",
-      subText: "Explore Our Shops",
-      description: "We have three shops in Surat, Gujarat. Visit us at Navjivan Circle, Gandhi Kutir; Shree Gopal Villa near Gujarat Gas Office, Adajan Gam; or Chhaprabhatha Road, Amroli.",
-      bgColor: "bg-customPink",
-      mainTextColor: "text-[#4f526e]",
-      textColor: "text-black",
-      buttonColor: "bg-[#4f526e]",
-      buttonTextColor: "text-white font-bold",
-      imageSrc: sofaImg2,
-      buttonText: "Our Shop",
-      navigateTo: () => navigate('/Shop')
-    },
-    {
+      type: "static",
       text: "Know More",
       subText: " About Zara Furniture",
       description: "Customization Expertise We create durable, long-lasting furniture with a luxurious look at a budget price. Our premium product finish prioritizes comfort and attention to detail.",
@@ -61,8 +80,56 @@ const SlideComponent1 = () => {
     }, 50); // Delay to allow reset to complete
   };
 
-  const { text, subText, description, bgColor, mainTextColor, textColor, buttonColor, buttonTextColor, imageSrc, buttonText, navigateTo } = data[activeButton - 1];
+  const currentSlide = data[activeButton - 1];
+  const { type, text, subText, description, bgColor, mainTextColor, textColor, buttonColor, buttonTextColor, imageSrc, bgImage, buttonText, navigateTo } = currentSlide;
 
+  // Render banner slide with full-background layout
+  if (type === "banner") {
+    return (
+      <div
+        className="flex-grow w-full mt-10 md:mt-0 overflow-hidden h-[600px] md:h-[760px] relative bg-cover bg-center bg-no-repeat"
+        style={{ backgroundImage: `url(${bgImage})` }}
+      >
+        {/* Dark overlay gradient - mobile: left to right, desktop: bottom to top */}
+        <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/40 to-transparent md:bg-gradient-to-t md:from-black/80 md:via-black/20 md:to-transparent pointer-events-none"></div>
+
+        <div className="relative z-10 flex flex-col justify-start items-start h-full px-8 pt-28 md:px-11 md:pt-0 md:justify-center pointer-events-none">
+          {/* Text content - left-aligned with padding on mobile for modern look */}
+          <div className="w-full md:w-6/12 lg:w-5/12 md:absolute md:left-11 text-left space-y-4 md:space-y-6">
+            <h1 className={`text-4xl md:text-5xl lg:text-6xl font-extrabold text-white leading-tight tracking-tight drop-shadow-2xl ${animate ? 'show' : ''}`}>
+              {text}
+            </h1>
+            <p className={`text-base md:text-xl lg:text-2xl text-white/95 leading-relaxed max-w-sm md:max-w-xl font-light tracking-wide drop-shadow-lg ${animate ? 'slide-in-left' : ''}`}>
+              {description}
+            </p>
+          </div>
+        </div>
+
+        {/* Shop Now Button - above navigation buttons on mobile, bottom center */}
+        <button
+          onClick={navigateTo}
+          className={`absolute bottom-20 left-0 right-0 mx-auto w-fit md:bottom-auto md:left-1/2 md:top-1/2 md:transform md:-translate-x-1/2 md:-translate-y-1/2 md:right-auto md:mx-0 z-10 rounded-md bg-white text-black font-bold px-10 py-3 text-[15px] md:text-[16px] whitespace-nowrap hover:bg-gray-200 transition-all duration-300 shadow-lg pointer-events-auto ${animate ? 'popup-content' : ''}`}
+        >
+          {buttonText}
+        </button>
+
+        {/* Navigation dots - SAME AS SLIDE 2 & 3 ORIGINAL DESIGN */}
+          <div className={`flex flex-row md:flex-col gap-10 md:gap-0 absolute bottom-4 left-0 right-0 justify-center md:absolute md:left-1/2 md:top-1/2 md:-translate-y-1/2 md:transform md:-translate-x-1/2 md:right-auto z-10 ${animate ? 'slide-in-down' : ''}`}>
+          {data.map((_, index) => (
+            <button
+              key={index}
+              className={`w-12 h-12 md:mb-8 rounded-full md:relative md:top-20 md:right-0 thick-font bg-white shadow-[0_3px_10px_rgb(0,0,0,0.2)] text-black pointer-events-auto flex items-center justify-center ${ index == 0 ? 'transform scale-110 transition-all duration-300 md:translate-x-[-10px]' : ''}`}
+              onClick={() => handleClick(index + 1)}
+            >
+              {index + 1}
+            </button>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  // Render static slide with original split layout
   return (
     <div className={`flex-grow ${bgColor} w-max md:w-full mt-10 md:mt-0 overflow-hidden md:h-[760px] md:h-auto h-[600px]`}>
       <div className="flex md:flex-row flex-col md:justify-between md:items-center md:px-11 px-6">
@@ -88,21 +155,21 @@ const SlideComponent1 = () => {
         </div>
 
         <div className={`sticky md:relative rounded-tr-full rounded-tl-full md:top-5 bg-white w-[320px] md:w-[0px] md:rotate-0 md:h-[600px] h-[300px] md:ml-0 md:bottom-0 bottom-[-60px] ${animate ?  'popup-content' : ''}`}>
-        </div>
+      </div>
 
         <div className={`flex md:flex-col justify-evenly relative bottom-[370px] md:bottom-10 ${animate ? 'slide-in-down' : ''}`}>
           {data.map((item, index) => (
-            <button
-              key={index}
+          <button
+            key={index}
               className={`relative top-20 w-12 h-12 mb-8 rounded-full right-3 md:right-0 thick-font ${buttonColor} shadow-[0_3px_10px_rgb(0,0,0,0.2)] ${buttonTextColor} ${activeButton === index + 1 ? 'transform scale-110 -translate-y-2 transition-all duration-300 md:translate-x-[-10px] md:translate-y-0' : ''}`}
-              onClick={() => handleClick(index + 1)}
-            >
-              {index + 1}
-            </button>
-          ))}
+            onClick={() => handleClick(index + 1)}
+          >
+            {index + 1}
+          </button>
+        ))}
+        </div>
         </div>
       </div>
-    </div>
   );
 };
 

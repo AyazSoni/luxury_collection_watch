@@ -20,7 +20,7 @@ const Navbar = () => {
             <div className='md:flex items-center justify-between bg-gray-100 py-4 md:px-10 px-7'>
                 {/* logo section */}
                 <div className='font-bold text-xl cursor-pointer flex items-center gap-1'>
-                    <span className="thick-font">Zara Furniture</span>
+                    <span className="thick-font">Luxury Collection</span>
                 </div>
                 {/* Menu icon */}
                 <div onClick={() => setOpen(!open)} className='absolute right-8 bottom-4 cursor-pointer md:hidden w-7 h-7'>
