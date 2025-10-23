@@ -137,19 +137,85 @@ export const uploadImageToStorage = async (file, progressCallback, productData =
 
 
 
-//banner functions using Supabase
-export const uploadBanner = async (file) => {
+//banner functions using Supabase and Firestore
+export const uploadBanner = async (file, bannerData) => {
   try {
-    return await uploadBannerToSupabase(file);
+    let imageUrl = null;
+
+    // Upload image to Supabase only if a file is provided
+    if (file) {
+      imageUrl = await uploadBannerToSupabase(file);
+    }
+
+    // Check if banner document already exists
+    const bannersCollection = collection(firestore, 'banners');
+    const bannerQuery = query(bannersCollection, limit(1));
+    const existingBanners = await getDocs(bannerQuery);
+
+    // Prepare banner metadata
+    const bannerMetadata = {
+      title: bannerData.title || '',
+      description: bannerData.description || '',
+      productId: bannerData.productId || null,
+      updatedAt: new Date()
+    };
+
+    // Add imageUrl only if a new file was uploaded
+    if (imageUrl) {
+      bannerMetadata.imageUrl = imageUrl;
+    }
+
+    if (!existingBanners.empty) {
+      // Update existing banner
+      const bannerDoc = existingBanners.docs[0];
+      await updateDoc(doc(firestore, 'banners', bannerDoc.id), bannerMetadata);
+
+      // Return existing imageUrl if no new file was uploaded
+      if (!imageUrl) {
+        const existingData = bannerDoc.data();
+        imageUrl = existingData.imageUrl;
+      }
+    } else {
+      // Create new banner document
+      if (!imageUrl) {
+        throw new Error('Image is required for new banner');
+      }
+      bannerMetadata.createdAt = new Date();
+      await addDoc(bannersCollection, bannerMetadata);
+    }
+
+    return imageUrl;
   } catch (error) {
     console.error('Error uploading banner:', error);
     throw error;
   }
 };
 
+export const getCurrentBannerData = async () => {
+  try {
+    const bannersCollection = collection(firestore, 'banners');
+    const bannerQuery = query(bannersCollection, limit(1));
+    const bannerSnapshot = await getDocs(bannerQuery);
+
+    if (!bannerSnapshot.empty) {
+      const bannerDoc = bannerSnapshot.docs[0];
+      return {
+        id: bannerDoc.id,
+        ...bannerDoc.data()
+      };
+    }
+
+    return null;
+  } catch (error) {
+    console.error('Error fetching current banner data:', error);
+    return null;
+  }
+};
+
 export const getCurrentBannerURL = async () => {
   try {
-    return await getCurrentBannerFromSupabase();
+    const bannerData = await getCurrentBannerData();
+    return bannerData?.imageUrl || await getCurrentBannerFromSupabase();
   } catch (error) {
     console.error('Error fetching current banner:', error);
     return null;
@@ -158,9 +224,21 @@ export const getCurrentBannerURL = async () => {
 
 export const deleteCurrentBanner = async () => {
   try {
+    // Delete from Supabase storage
     await deleteCurrentBannerFromSupabase();
+
+    // Delete from Firestore
+    const bannersCollection = collection(firestore, 'banners');
+    const bannerQuery = query(bannersCollection, limit(1));
+    const bannerSnapshot = await getDocs(bannerQuery);
+
+    if (!bannerSnapshot.empty) {
+      const bannerDoc = bannerSnapshot.docs[0];
+      await deleteDoc(doc(firestore, 'banners', bannerDoc.id));
+    }
   } catch (error) {
     console.error('Error deleting current banner:', error);
+    throw error;
   }
 };
 

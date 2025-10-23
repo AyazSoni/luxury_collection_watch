@@ -113,19 +113,20 @@ export const deleteFileFromSupabase = async (fileUrl) => {
 export const uploadBannerToSupabase = async (file) => {
   try {
     const filePath = 'banners/banner.jpg'
-    
+
     // Upload banner to Supabase Storage
     const { data, error } = await supabase.storage
       .from(STORAGE_BUCKET)
       .upload(filePath, file, {
-        upsert: true // Replace existing file if it exists
+        upsert: true, // Replace existing file if it exists
+        cacheControl: '0' // Disable caching
       })
 
     if (error) {
       throw new Error(`Failed to upload banner: ${error.message}`)
     }
 
-    // Get public URL
+    // Get public URL with cache-busting timestamp
     const { data: urlData } = supabase.storage
       .from(STORAGE_BUCKET)
       .getPublicUrl(filePath)
@@ -134,7 +135,11 @@ export const uploadBannerToSupabase = async (file) => {
       throw new Error('Failed to get banner public URL')
     }
 
-    return urlData.publicUrl
+    // Add timestamp to URL to prevent browser caching
+    const timestamp = new Date().getTime()
+    const urlWithCacheBust = `${urlData.publicUrl}?t=${timestamp}`
+
+    return urlWithCacheBust
   } catch (error) {
     throw new Error(`Supabase banner upload failed: ${error.message}`)
   }

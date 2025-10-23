@@ -3,29 +3,45 @@ import React, { useState, useEffect } from 'react';
 import { FiUpload } from 'react-icons/fi';
 import { FaArrowLeft  , FaSpinner} from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
-import { uploadBanner, getCurrentBannerURL, deleteCurrentBanner } from '../../Firebase.jsx';
+import { uploadBanner, getCurrentBannerData, deleteCurrentBanner } from '../../Firebase.jsx';
+import { useProduct } from '../../context/ProductProvider.jsx';
 
 const BannerUpload = () => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [preview, setPreview] = useState('');
-  const [currentBanner, setCurrentBanner] = useState('');
+  const [currentBanner, setCurrentBanner] = useState(null);
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [selectedProductId, setSelectedProductId] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
   const [success, setSuccess] = useState('');
   const navigate = useNavigate();
+  const { products, fetchProducts } = useProduct();
 
   useEffect(() => {
-    const fetchCurrentBanner = async () => {
+    const fetchData = async () => {
       try{
-      const url = await getCurrentBannerURL();
-      setCurrentBanner(url || 'https://via.placeholder.com/600x150?text=Current+Banner');
+        // Fetch current banner data
+        const bannerData = await getCurrentBannerData();
+        if (bannerData) {
+          setCurrentBanner(bannerData);
+          setTitle(bannerData.title || '');
+          setDescription(bannerData.description || '');
+          setSelectedProductId(bannerData.productId || '');
+        }
+
+        // Fetch products for selector
+        if (products.length === 0) {
+          await fetchProducts('latest');
+        }
       }catch (err) {
         setError(err.message);
       } finally {
         setLoading(false);
       }
     };
-    fetchCurrentBanner();
+    fetchData();
   }, []);
 
   const goBack = () => navigate(-1);
@@ -48,23 +64,55 @@ const BannerUpload = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!selectedFile) {
-      setError('No file selected.');
+
+    // Validation
+    if (!title.trim()) {
+      setError('Banner title is required.');
+      return;
+    }
+
+    if (!description.trim()) {
+      setError('Banner description is required.');
+      return;
+    }
+
+    if (!selectedFile && !currentBanner) {
+      setError('Please select a banner image.');
       return;
     }
 
     try {
       setLoading(true);
-      await deleteCurrentBanner();
-      const url = await uploadBanner(selectedFile);
-      setCurrentBanner(url);
-      setSelectedFile(null);
-      
-      setPreview('');
+
+      // Prepare banner data
+      const bannerData = {
+        title: title.trim(),
+        description: description.trim(),
+        productId: selectedProductId || null
+      };
+
+      // If new file is selected, delete old banner and upload new one
+      if (selectedFile) {
+        await deleteCurrentBanner();
+        const url = await uploadBanner(selectedFile, bannerData);
+        setCurrentBanner({ imageUrl: url, ...bannerData });
+        setSelectedFile(null);
+        setPreview('');
+      } else {
+        // Update metadata only (no new image)
+        const url = await uploadBanner(null, bannerData);
+        setCurrentBanner({ imageUrl: url || currentBanner.imageUrl, ...bannerData });
+      }
+
+      // Clear cached banner data so frontend gets fresh data
+      sessionStorage.removeItem('cachedBannerData');
+      sessionStorage.removeItem('cachedBannerURL');
+
       setError('');
-      setSuccess('Banner uploaded successfully!');
+      setSuccess('Banner updated successfully!');
     } catch (error) {
       setError('Error uploading banner. Please try again.');
+      console.error(error);
     }finally {
       setLoading(false);
     }
@@ -88,10 +136,62 @@ return (
             {currentBanner && (
               <div className="mb-6">
                 <h3 className="text-xl font-semibold mb-2 md:text-3xl">Current Banner:</h3>
-                <img src={currentBanner} alt="Current Banner" className="w-full rounded-lg shadow-md" />
+                <img src={currentBanner.imageUrl} alt="Current Banner" className="w-full rounded-lg shadow-md" />
+                {currentBanner.title && <p className="mt-2 text-gray-700 font-semibold">Title: {currentBanner.title}</p>}
+                {currentBanner.description && <p className="text-gray-600">Description: {currentBanner.description}</p>}
               </div>
             )}
             <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Title Input */}
+              <div>
+                <label className="block text-lg font-medium text-gray-700 mb-2">
+                  Banner Title <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="Enter banner title"
+                  required
+                />
+              </div>
+
+              {/* Description Input */}
+              <div>
+                <label className="block text-lg font-medium text-gray-700 mb-2">
+                  Banner Description <span className="text-red-500">*</span>
+                </label>
+                <textarea
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="Enter banner description"
+                  rows="3"
+                  required
+                ></textarea>
+              </div>
+
+              {/* Product Selector */}
+              <div>
+                <label className="block text-lg font-medium text-gray-700 mb-2">
+                  Link to Product <span className="text-gray-500 text-sm">(Optional)</span>
+                </label>
+                <select
+                  value={selectedProductId}
+                  onChange={(e) => setSelectedProductId(e.target.value)}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                >
+                  <option value="">-- Select a product (optional) --</option>
+                  {products.map((product) => (
+                    <option key={product.id} value={product.id}>
+                      {product.name} ({product.category})
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Image Upload */}
               <div className="flex items-center justify-center space-x-4 flex-col space-y-3">
                 <label htmlFor="file-upload" className="cursor-pointer">
                   <FiUpload className="text-8xl text-gray-500 hover:text-blue-600 transition duration-300 border-dotted border-gray-500 border-2 p-5" />
@@ -103,7 +203,7 @@ return (
                     className="hidden"
                   />
                 </label>
-                <p className="thick-font translate-x-[-5px]">Select new Banner</p>
+                <p className="thick-font translate-x-[-5px]">{currentBanner ? 'Change Banner Image (Optional)' : 'Select Banner Image *'}</p>
                 {selectedFile && (
                   <h3 className="text-xl font-semibold mb-2 text-blue-600">File selected: {selectedFile.name}</h3>
                 )}
@@ -120,7 +220,7 @@ return (
                   type="submit"
                   className="w-full py-3 px-6 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400"
                 >
-                  Upload Banner
+                  {currentBanner ? 'Update Banner' : 'Upload Banner'}
                 </button>
               </div>
             </form>
