@@ -77,27 +77,32 @@ export const deleteFileFromSupabase = async (fileUrl) => {
   try {
     // Extract file path from URL
     const url = new URL(fileUrl)
-    const pathParts = url.pathname.split('/')
-    const bucketIndex = pathParts.indexOf(STORAGE_BUCKET)
-    
-    if (bucketIndex === -1) {
-      throw new Error('Invalid file URL - bucket not found')
-    }
-    
-    const filePath = pathParts.slice(bucketIndex + 1).join('/')
-    
-    // Delete file from Supabase Storage
-    const { error } = await supabase.storage
-      .from(STORAGE_BUCKET)
-      .remove([filePath])
+    console.log(url)
 
+    // The URL format is: /storage/v1/object/public/{bucket}/{filepath}
+    // We need to extract only the filepath after the bucket name
+    // Example: /storage/v1/object/public/product/product/glasses_test4_793.png
+    // We want only: product/glasses_test4_793.png (the last 2 parts)
+
+
+    // Take the last 2 parts (folder/filename)
+    const filePath = pathParts.slice(-2).join('/')
+    
+
+    const { data , error } = await supabase.storage
+      .from(STORAGE_BUCKET)
+      .remove([filePath]);
     if (error) {
       throw new Error(`Failed to delete file: ${error.message}`)
+    }
+    else {
+      console.log('Deleted successfully:', data)
     }
   } catch (error) {
     throw new Error(`Supabase delete failed: ${error.message}`)
   }
 }
+
 
 /**
  * Upload banner to Supabase Storage

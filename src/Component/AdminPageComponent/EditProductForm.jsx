@@ -10,7 +10,6 @@ const EditProductForm = ({ product, onBack }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [uploadProgress, setUploadProgress] = useState(0);
-  const [deletingImage, setDeletingImage] = useState(null);
   
   const navigate = useNavigate();
   const { refreshProducts } = useProduct();
@@ -62,24 +61,16 @@ const EditProductForm = ({ product, onBack }) => {
     });
   };
 
-  const handleImageDelete = async (index, isExistingImage = false) => {
+  const handleImageDelete = (index, isExistingImage = false) => {
     if (isExistingImage) {
-      // Delete existing image immediately from Supabase storage
+      // Mark existing image for deletion (don't delete from storage yet)
       const imageUrl = formData.images && formData.images[index];
       if (imageUrl) {
-        try {
-          // Delete from Supabase storage immediately
-          await deleteImageFromStorage(imageUrl);
-          
-          // Update form data to remove the image
-          setFormData({
-            ...formData,
-            images: (formData.images || []).filter((_, i) => i !== index)
-          });
-        } catch (error) {
-          console.error('Failed to delete image from storage:', error);
-          setError('Failed to delete image. Please try again.');
-        }
+        setFormData({
+          ...formData,
+          images: (formData.images || []).filter((_, i) => i !== index),
+          deletedImages: [...(formData.deletedImages || []), imageUrl]
+        });
       }
     } else {
       // Remove selected file (no storage deletion needed)
@@ -103,6 +94,15 @@ const EditProductForm = ({ product, onBack }) => {
             formData.selectedFiles.map(file => uploadImageToStorage(file, setUploadProgress, formData))
           )
         : [];
+      
+      // Delete images from storage that were marked for deletion
+      if (formData.deletedImages && formData.deletedImages.length > 0) {
+        console.log('Deleting images from storage:', formData.deletedImages);
+        await Promise.all(
+          formData.deletedImages.map(imageUrl => deleteImageFromStorage(imageUrl))
+        );
+        console.log('Images deleted from storage successfully');
+      }
       
       // Prepare updated product data
       const updatedProductData = {
@@ -161,7 +161,7 @@ const EditProductForm = ({ product, onBack }) => {
                 <img src={image} alt={`Existing ${index + 1}`} className="w-full h-full object-cover rounded-md" />
                 <button
                   type="button"
-                  className="absolute top-0 right-0 bg-red-500 text-white rounded-full p-0.5 m-1 text-[12px]"
+                  className="absolute top-0 right-0 bg-red-500 hover:bg-red-600 text-white rounded-full p-0.5 m-1 text-[12px]"
                   onClick={() => handleImageDelete(index, true)}
                 >
                   <IoMdClose />
