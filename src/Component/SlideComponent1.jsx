@@ -100,9 +100,11 @@ const SlideComponent1 = () => {
             <h1 className={`text-4xl md:text-5xl lg:text-6xl font-extrabold text-white leading-tight tracking-tight drop-shadow-2xl ${animate ? 'show' : ''}`}>
               {text}
             </h1>
-            <p className={`text-base md:text-xl lg:text-2xl text-white/95 leading-relaxed max-w-sm md:max-w-xl font-light tracking-wide drop-shadow-lg ${animate ? 'slide-in-left' : ''}`}>
-              {description}
-            </p>
+            {description && (
+              <p className={`text-base md:text-xl lg:text-2xl text-white/95 leading-relaxed max-w-sm md:max-w-xl font-light tracking-wide drop-shadow-lg ${animate ? 'slide-in-left' : ''}`}>
+                {description}
+              </p>
+            )}
           </div>
         </div>
 
@@ -139,9 +141,11 @@ const SlideComponent1 = () => {
           <p className={`text-left max-w-md md:text-6xl mb-2 font-bold ${mainTextColor} heading md:text-3xl text-2xl md:mb-5 ${animate ? 'slide-in-down' : ''}`}>
             {subText}
           </p>
-          <p className={`text-left mb-2 md:text-xl max-w-72 ${textColor} text-[13px] md:mb-5 ${animate ? 'slide-in-left' : ''}`}>
-            {description}
-          </p>
+          {description && (
+            <p className={`text-left mb-2 md:text-xl max-w-72 ${textColor} text-[13px] md:mb-5 ${animate ? 'slide-in-left' : ''}`}>
+              {description}
+            </p>
+          )}
           <button onClick={navigateTo}
             className={`rounded-md ${buttonColor} ${buttonTextColor} w-32 h-6 text-[13px] md:text-[18px] md:w-44 md:h-10 whitespace-nowrap relative bottom-1 ${animate ? 'popup-content' : ''}`}>
             {buttonText}

@@ -40,12 +40,11 @@ const CardFurniture = ({ product }) => {
         />
         <div className="p-3 mt-2 grid gap-0.5">
           <h1 className="thick-font text-2xl text-neutral-700 mb-1"> {product.name} </h1>
-          <h4 className="thick-font text-neutral-400 text-[13px] mb-1 h-10">
-            {product.description.length === 0
-              ? "Crafted with quality materials and designed for both functionality and style."
-              : product.description.substring(0, 50) + (product.description.length > 50 ? "..." : "")
-            }
-          </h4>
+          {product.description && product.description.length > 0 && (
+            <h4 className="thick-font text-neutral-400 text-[13px] mb-1 h-10">
+              {product.description.substring(0, 50) + (product.description.length > 50 ? "..." : "")}
+            </h4>
+          )}
 
           <div className="flex flex-row gap-10">
             <p className="thick-font mt-2 text-xl text-[rgb(95,95,95)] max-w-[80px] whitespace-nowrap">RS {product.price}</p>

@@ -1,16 +1,10 @@
 import React from 'react';
-import sofa from "../Images/sofap.png";
-import { LuSofa, LuBedDouble, LuBedSingle } from "react-icons/lu";
-import { HiOutlineTv } from "react-icons/hi2";
-import { MdOutlineTableBar } from "react-icons/md";
-import { CgBox } from "react-icons/cg";
-import sofaBed from "../Images/sofa-bed.png";
-import Sofa3 from "../Images/Category/sofa3.png";
-import wardrobe from "../Images/wardrobe.png";
-import closet from "../Images/closet.png";
-import shoeRack from "../Images/6403683.png";
+import productDisplayImage from "../Images/product_display_page-removebg-preview.png";
 import { FaThLarge } from "react-icons/fa";
-import { RiSofaLine } from "react-icons/ri";
+import { MdWatch } from "react-icons/md";
+import { BsWatch } from "react-icons/bs";
+import { IoMdGlasses } from "react-icons/io";
+import { HiFire } from "react-icons/hi";
 import { useCategory } from '../context/CategoryProvider'; 
 import { useProduct } from '../context/ProductProvider';
 
@@ -20,52 +14,60 @@ const ProductPageHead = () => {
   const isActive = (category) => category === selectedCategory;
 
   const handleCategoryClick = (category) => {
-    // Only reset and update if it's a different category
     if (category !== selectedCategory) {
       setSelectedCategory(category);
     }
   };
 
   return (
-    <section className="mt-16 ">
-      <div className="w-full h-40 bg-gradient-to-r from-indigo-200 to-cyan-200 flex justify-center md:h-56">
-        <img src={sofa} className="relative top-3 h-60 md:h-80 md:top-0 slide-in-down" />
+    <section className="mt-16 relative">
+      {/* Gradient Background Section */}
+      <div className="w-full h-48 md:h-64 bg-gradient-to-r from-purple-200 via-purple-100 to-blue-200 relative overflow-visible">
+        <img 
+          src={productDisplayImage} 
+          className="h-90 md:h-[420px] object-contain slide-in-down absolute bottom-[-95px] md:bottom-[-160px] right-7 md:right-16 z-10" 
+          alt="Product Display"
+        />
       </div>
-      <div className="mt-20 p-5 py-2 grid grid-cols-13 overflow-x-scroll gap-[100px] md:gap-[200px] ">
-        {[
-          { category: null, Icon: FaThLarge, label: 'All' },
-          { category: 'SOFASET', Icon: RiSofaLine, label: 'Sofa' },
-          { category: 'BEDROOM SET', Icon: LuBedDouble, label: 'Bed Set' },
-          { category: 'TV UNIT', Icon: HiOutlineTv, label: 'TV Unit' },
-          { category: 'MULTIPURPOSE TABLES', Icon: MdOutlineTableBar, label: 'Tables' },
-          { category: 'SIDEBOX', Icon: CgBox, label: 'Side Box' },
-          { category: 'SINGLE BED', Icon: LuBedSingle, label: 'Single Bed' },
-          { category: 'LAUNGER SOFA', Icon: LuSofa, label: 'Launger Sofa' },
-          { category: '3+2 SOFA', image: Sofa3, label: '3+2 SOFA' } ,
-          { category: 'SOFACOMEBED', image: sofaBed, label: 'Sofa Bed' },
-          { category: 'WARDROBE & BED', image: wardrobe, label: 'Wardrobe' },
-          { category: 'METAL WARDROBE AND METALBED', image: closet, label: 'Metal ' },
-          { category: 'SHOE RACK', image: shoeRack, label: 'Shoe Rack' }
-        ].map(({ category, Icon, image, label }) => (
-          <button
-            key={category}
-            onClick={() => handleCategoryClick(category)}
-            className={`${isActive(category) ? 'translate-y-[-5px] transition-all duration-300' : ''}  flex flex-col justify-center items-center mx-4`}
-          >
-            {Icon ? (
-              <Icon className={`rounded text-5xl bg-cyan-100 shadow-2xl p-[7px] shadow-md md:text-8xl md:p-4 md:rounded-2xl
-             transition-all duration-300 ${isActive(category) ? ' bg-gradient-to-r from-green-300 to-blue-500 animate-gradient-x text-white' : ''}`}
-               />
-            ) : (
-              <div className={`rounded  w-[50px] h-[48px] shadow-2xl p-[7px] shadow-md text-bold md:w-[100px] md:h-[100px] md:rounded-2xl md:p-[18px] transition-all duration-300 bg-cyan-100  ${isActive(category) ? ' bg-gradient-to-r from-green-300 to-blue-500 animate-gradient-x' : ''}`}>
-                <img src={image} className="w-[80px]" />
+      
+      {/* White Background Section with Category Icons */}
+      <div className="w-full bg-white py-8 mt-4 md:mt-4 relative z-20">
+        <div className="flex justify-center items-center gap-4 md:gap-8 overflow-x-auto pb-4 relative z-30" style={{ paddingLeft: '100px', paddingRight: '24px' }}>
+          {[
+            { category: null, Icon: FaThLarge, label: 'All' },
+            { category: 'TRENDING', Icon: HiFire, label: 'Trending' },
+            { category: "MEN'S WATCH", Icon: MdWatch, label: "Men's Watch" },
+            { category: "GIRL'S WATCH", Icon: BsWatch, label: "Girls Watch" },
+            { category: 'EYEWEAR', Icon: IoMdGlasses, label: 'Eyewear' }
+          ].map(({ category, Icon, label }) => (
+            <button
+              key={category}
+              onClick={() => handleCategoryClick(category)}
+              className={`flex flex-col items-center gap-2 transition-all duration-300 min-w-[80px] md:min-w-[100px] ${
+                isActive(category) ? 'scale-105' : ''
+              }`}
+            >
+              <div className={`
+                w-16 h-16 md:w-20 md:h-20 rounded-xl 
+                flex items-center justify-center
+                transition-all duration-300
+                ${isActive(category) 
+                  ? 'bg-gradient-to-br from-indigo-500 to-cyan-500 text-white shadow-lg' 
+                  : 'bg-cyan-100 text-gray-700 hover:bg-cyan-200'
+                }
+              `}>
+                <Icon className={`text-3xl md:text-4xl ${isActive(category) ? 'text-white' : 'text-gray-700'}`} />
               </div>
-            )}
-            <h4 className="thick-font mt-[5px] text-center whitespace-nowrap  md:text-2xl md:translate-x-1 text-[15px]">
-              {label}
-            </h4>
-          </button>
-        ))}
+              <h4 className={`
+                text-xs md:text-sm thick-font whitespace-nowrap text-center
+                transition-colors duration-300
+                ${isActive(category) ? 'text-indigo-600 font-bold' : 'text-gray-600'}
+              `}>
+                {label}
+              </h4>
+            </button>
+          ))}
+        </div>
       </div>
     </section>
   );

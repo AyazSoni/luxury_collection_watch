@@ -21,7 +21,9 @@ const message = encodeURIComponent(`Hi zara furniture , I am interested in your 
     <section className="md:pt-8 md:mt-8 md:rounded-2xl  md:shadow-[rgba(50,_50,_105,_0.15)_0px_2px_5px_0px,_rgba(0,_0,_0,_0.05)_0px_1px_1px_0px] md:pb-8 md:mr-7 md:translate-x-[-5px]">
       <h1 className="text-2xl thick-font text-customGreen px-6 md:text-4xl mt-7 md:mt-0 slide-in-down"> {detail.name} </h1>
      <div className="px-6 md:translate-y-4">
-      <span className="sthick-font text-[15px] text-neutral-500 mt-3 md:text-xl">{detail.description.length === 0 ? "Crafted with quality materials and designed for both functionality and style, this piece enhances any space, providing practical and aesthetic value" : detail.description }</span>
+      {detail.description && detail.description.length > 0 && (
+        <span className="sthick-font text-[15px] text-neutral-500 mt-3 md:text-xl">{detail.description}</span>
+      )}
 
     {/*  <span onClick={toggleShowFullText} className="text-gray-500 text-[11px] thick-font translate-y-[-7px] ml-1 "> read more </span>*/}
     </div>
