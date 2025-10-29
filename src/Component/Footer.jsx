@@ -65,8 +65,8 @@ const message = encodeURIComponent('Hi Luxury Collection' ); // Optional message
             </div>
             <div className="flex items-start gap-3">
               <MdEmail className="w-5 h-5 mt-0.5 text-bgGreen flex-shrink-0" />
-              <a href="mailto:tabrezmalek@gmail.com" className="text-neutral-200 text-sm md:text-base hover:text-white transition-colors break-words">
-                tabrezmalek@gmail.com
+              <a href="mailto:tabrezmalek06@gmail.com" className="text-neutral-200 text-sm md:text-base hover:text-white transition-colors break-words">
+                tabrezmalek06@gmail.com
               </a>
             </div>
           </div>

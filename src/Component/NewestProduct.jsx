@@ -9,8 +9,8 @@ const NewestProduct = () => {
   });
   
   const whatsappOpen = () => {
-    const phoneNumber = "6355617070";
-const message = encodeURIComponent('Hello, i want to buy furniture' ); // Optional message
+    const phoneNumber = "6352868656";
+const message = encodeURIComponent('Hi! I’m interested in buying a watch from your collection. Could you help me with some options?' ); // Optional message
 
     // WhatsApp URL scheme
     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;

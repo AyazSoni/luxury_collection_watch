@@ -8,8 +8,14 @@ import { FaWhatsapp } from "react-icons/fa6";
 import { MdEmail } from "react-icons/md";
 import { FaInstagram } from "react-icons/fa6";
 import { useInView } from 'react-intersection-observer';
+import { useEffect } from 'react';
 
 const ContactUs = () => {
+  
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   
   const { ref, inView } = useInView({
     threshold :0.2,
@@ -37,7 +43,7 @@ const { ref: ref6, inView: inView6 } = useInView({
   
   
   const whatsappOpen = () => {
-    const phoneNumber = "6355617070";
+    const phoneNumber = "6352868656";
 const message = encodeURIComponent('Hi zara Furniture' ); // Optional message
 
     // WhatsApp URL scheme
@@ -46,17 +52,17 @@ const message = encodeURIComponent('Hi zara Furniture' ); // Optional message
     window.open(whatsappUrl, '_blank');
   }
   const openInstagram = () => {
-    const username = "zara_furniture_surat"; // Your Instagram username or user ID
+    const username = "luxury_collection46"; // Your Instagram username or user ID
     const instagramUrl = `https://www.instagram.com/${username}`;
     window.open(instagramUrl, '_blank');
 }
   const openEmail = () => {
-    const email = "faraazn007@gmail.com"; // Your email address
+    const email = "tabrezmalek06@gmail.com"; // Your email address
     const emailUrl = `mailto:${email}`;
     window.open(emailUrl, '_blank');
 }
   const dialPhone = () => {
-    const phoneNumber = "6355617070"; // Your phone number
+    const phoneNumber = "6352868656"; // Your phone number
     const phoneUrl = `tel:${phoneNumber}`;
     window.open(phoneUrl, '_blank');
 }
@@ -76,16 +82,16 @@ const message = encodeURIComponent('Hi zara Furniture' ); // Optional message
         <div className="absolute inset-0 flex items-center justify-center animate-fade-up">
           <div  className="text-center">
             <h1 className="md:text-6xl font-bold text-white  text-4xl thick-font"> Let's Connect </h1>
-            <p className="mt-4 md:text-xl text-white text-lg px-4">We're Here for You – Reach Out to Zara Furniture Today!</p>
+            <p className="mt-4 md:text-xl text-white text-lg px-4">We’re here to help you find your perfect watch. Reach out to us anytime for inquiries or orders.</p>
           </div>
         </div>
       </div>
       
       <div  className="grid grid-cols-1 md:grid-cols-2 mt-10 md:p-8 justify-items-center p-3 mb-14">
         <div>
-        <h1  className="thick-font md:text-4xl py-3 text-center text-2xl p-2"
-        >Personalized Assistance at Zara Furniture</h1>
-        <h4 className="thick-font md:text-xl py-3 text-center text-[14px]">Contact Zara Furniture for tailored support. Our Contact Us page is your direct line to our dedicated team. From product inquiries to order assistance, we're here to listen and provide prompt, friendly service. With a commitment to exceeding your expectations, we ensure your experience with us is exceptional. Reach out today and discover the difference personalized care makes at Zara Furniture.</h4>
+        <h1  className="thick-font md:text-4xl py-5 text-center text-2xl p-2"
+        >Personalized Assistance at Luxury Collection</h1>
+        <h4 className="thick-font md:text-xl py-5 text-center text-[16px]">Need help choosing the right watch? We’re here for you! Reach out to us for quick replies, personalized suggestions, or any questions about our collection. We’ll help you find the perfect piece that fits your style and budget.</h4>
         </div>
         <div ref={ref}>
           <img  src={Contact} className={`h-80 
