@@ -87,6 +87,10 @@ export const ProductProvider = ({ children }) => {
         .sort((a, b) => b.createdAt - a.createdAt);
     }
     
+    if (category === "trending") {
+      return products.filter((p) => p.trending === true);
+    }
+    
     // Return products filtered by specific category
     return products.filter((p) => p.category === category);
   }, [products]);

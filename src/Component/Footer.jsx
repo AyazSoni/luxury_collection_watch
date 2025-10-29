@@ -77,25 +77,25 @@ const message = encodeURIComponent('Hi Luxury Collection' ); // Optional message
           <h1 className="thick-font text-lg md:text-xl mb-4">Our Products</h1>
           <div className="flex flex-col gap-3">
             <button 
-              onClick={() => Tonav('TRENDING')} 
+              onClick={() => Tonav('trending')} 
               className="text-neutral-200 text-sm md:text-base text-left hover:text-white transition-colors w-fit"
             >
               Trending
             </button>
             <button 
-              onClick={() => Tonav("MEN'S WATCH")} 
+              onClick={() => Tonav("men")} 
               className="text-neutral-200 text-sm md:text-base text-left hover:text-white transition-colors w-fit"
             >
               Men's Watch
             </button>
             <button 
-              onClick={() => Tonav("WOMEN'S WATCH")} 
+              onClick={() => Tonav("women")} 
               className="text-neutral-200 text-sm md:text-base text-left hover:text-white transition-colors w-fit"
             >
               Women's Watch
             </button>
             <button 
-              onClick={() => Tonav('EYEWEAR')} 
+              onClick={() => Tonav('glasses')} 
               className="text-neutral-200 text-sm md:text-base text-left hover:text-white transition-colors w-fit"
             >
               Stylish Eyewear

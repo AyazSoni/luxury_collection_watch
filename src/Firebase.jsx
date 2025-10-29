@@ -66,6 +66,14 @@ export async function fetchProductsFromFirestore(category = "latest", lastDoc = 
         ...(lastDoc ? [startAfter(lastDoc)] : []),
         limit(10)
       );
+    } else if (category === "trending") {
+      // Fetch products where trending === true
+      q = query(
+        collection(firestore, "products"),
+        where("trending", "==", true),
+        ...(lastDoc ? [startAfter(lastDoc)] : []),
+        limit(10)
+      );
     } else {
       // Fetch products filtered by specific category (without orderBy to avoid index requirement)
       q = query(

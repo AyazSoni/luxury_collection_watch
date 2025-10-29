@@ -35,10 +35,10 @@ const ProductPageHead = () => {
         <div className="flex justify-center items-center gap-4 md:gap-8 overflow-x-auto pb-4 relative z-30" style={{ paddingLeft: '100px', paddingRight: '24px' }}>
           {[
             { category: null, Icon: FaThLarge, label: 'All' },
-            { category: 'TRENDING', Icon: HiFire, label: 'Trending' },
-            { category: "MEN'S WATCH", Icon: MdWatch, label: "Men's Watch" },
-            { category: "GIRL'S WATCH", Icon: BsWatch, label: "Girls Watch" },
-            { category: 'EYEWEAR', Icon: IoMdGlasses, label: 'Eyewear' }
+            { category: 'trending', Icon: HiFire, label: 'Trending' },
+            { category: "men", Icon: MdWatch, label: "Men's Watch" },
+            { category: "women", Icon: BsWatch, label: "Girls Watch" },
+            { category: 'glasses', Icon: IoMdGlasses, label: 'Eyewear' }
           ].map(({ category, Icon, label }) => (
             <button
               key={category}
