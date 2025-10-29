@@ -104,7 +104,7 @@ const MainProductPage = () => {
         <button 
           onClick={() => {
             const phoneNumber = "6355617070";
-            const message = encodeURIComponent(`Hi zara furniture , I am interested in your ${product.name} product  whose price is ${product.price}  product and I want to arrange meeting with you.  `);
+            const message = encodeURIComponent(`Hi Luxury Collection, I am interested in product ID: ${product.id} whose price is ${product.price}. I want to arrange meeting with you.`);
             const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
             window.open(whatsappUrl, '_blank');
           }}

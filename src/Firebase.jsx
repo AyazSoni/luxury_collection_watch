@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, addDoc , getDocs , doc , deleteDoc , updateDoc , orderBy, query, where, limit, startAfter} from "firebase/firestore";
+import { getFirestore, collection, addDoc , getDocs , doc , deleteDoc , updateDoc , orderBy, query, where, limit, startAfter, getDoc} from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { uploadFileToSupabase, deleteFileFromSupabase, uploadBannerToSupabase, getCurrentBannerFromSupabase, deleteCurrentBannerFromSupabase } from './Supabase.jsx';
 
@@ -120,6 +120,30 @@ export const updateProductInFirestore = async (productId, updatedData) => {
     throw error;
   }
 };
+
+/**
+ * Fetch a single product by ID from Firestore
+ * @param {string} productId - Product ID to fetch
+ * @returns {Object|null} Product object or null if not found
+ */
+export async function fetchProductById(productId) {
+  try {
+    const productRef = doc(firestore, "products", productId);
+    const productSnap = await getDoc(productRef);
+    
+    if (productSnap.exists()) {
+      return {
+        id: productSnap.id,
+        ...productSnap.data()
+      };
+    } else {
+      return null;
+    }
+  } catch (error) {
+    console.error('Error fetching product by ID:', error);
+    throw new Error(`Failed to fetch product: ${error.message}`);
+  }
+}
 
 
 

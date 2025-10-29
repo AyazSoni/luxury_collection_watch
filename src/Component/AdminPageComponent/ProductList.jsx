@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { FaArrowLeft, FaSpinner, FaRegSadTear } from "react-icons/fa";
+import { FaArrowLeft, FaSpinner, FaRegSadTear, FaSearch } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
-import { deleteProductFromFirebase } from '../../Firebase.jsx';
+import { deleteProductFromFirebase, fetchProductById } from '../../Firebase.jsx';
 import { useProduct } from '../../context/ProductProvider.jsx';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -13,6 +13,10 @@ const ProductList = ({onEdit}) => {
   const [showDialog, setShowDialog] = useState(false);
   const [productToDelete, setProductToDelete] = useState(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
+  const [searchId, setSearchId] = useState('');
+  const [searchResult, setSearchResult] = useState(null);
+  const [searchLoading, setSearchLoading] = useState(false);
+  const [searchError, setSearchError] = useState(null);
 
   const navigate = useNavigate();
 
@@ -49,8 +53,48 @@ const ProductList = ({onEdit}) => {
     }
   }, [selectedCategory]);
 
+  // Handle search by ID
+  const handleSearchById = async () => {
+    if (!searchId.trim()) {
+      toast.error("Please enter a product ID");
+      return;
+    }
+
+    setSearchLoading(true);
+    setSearchError(null);
+    setSearchResult(null);
+
+    try {
+      const product = await fetchProductById(searchId.trim());
+      if (product) {
+        setSearchResult(product);
+        toast.success("Product found!");
+      } else {
+        setSearchError("Product not found");
+        toast.error("Product not found with this ID");
+      }
+    } catch (err) {
+      setSearchError(err.message);
+      toast.error(err.message);
+    } finally {
+      setSearchLoading(false);
+    }
+  };
+
+  // Clear search
+  const clearSearch = () => {
+    setSearchId('');
+    setSearchResult(null);
+    setSearchError(null);
+  };
+
   // Get products for the selected category using existing function
   const filteredProducts = useMemo(() => {
+    // If searching by ID, return search result or empty array
+    if (searchResult) {
+      return [searchResult];
+    }
+
     let categoryProducts = getProductsByCategory(selectedCategory || "latest");
 
     // Apply trending filter if enabled
@@ -59,7 +103,7 @@ const ProductList = ({onEdit}) => {
     }
 
     return categoryProducts;
-  }, [products, selectedCategory, showTrendingOnly, getProductsByCategory]);
+  }, [products, selectedCategory, showTrendingOnly, getProductsByCategory, searchResult]);
 
   // Load more products for current category
   const loadMoreProducts = () => {
@@ -104,6 +148,44 @@ const ProductList = ({onEdit}) => {
         </button>
       </div>
       <h1 className="text-3xl font-bold text-center mb-6 thick-font text-gray-700 my-4 md:text-5xl md:mb-12">Manage Your Product</h1>
+
+      {/* Search by ID */}
+      <div className="mb-6 md:mb-8 p-4 bg-gray-50 rounded-lg border border-gray-200">
+        <div className="flex flex-col md:flex-row gap-3 items-center">
+          <div className="flex-1 w-full md:w-auto">
+            <label className="block text-sm font-semibold text-gray-700 mb-2">Search by Product ID</label>
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={searchId}
+                onChange={(e) => setSearchId(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && handleSearchById()}
+                placeholder="Enter product ID..."
+                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm md:text-base"
+              />
+              <button
+                onClick={handleSearchById}
+                disabled={searchLoading}
+                className="px-4 py-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+              >
+                <FaSearch />
+                {searchLoading ? 'Searching...' : 'Search'}
+              </button>
+              {searchResult && (
+                <button
+                  onClick={clearSearch}
+                  className="px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-lg transition duration-300"
+                >
+                  Clear
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+        {searchError && (
+          <p className="mt-2 text-red-500 text-sm">{searchError}</p>
+        )}
+      </div>
 
       {/* Category Filters */}
       <div className="flex overflow-x-auto mb-4 md:mb-6 p-1">
@@ -152,6 +234,7 @@ const ProductList = ({onEdit}) => {
         <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
           <thead>
             <tr className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+              <th className="py-2 px-2 text-left">ID</th>
               <th className="py-2 px-2 text-left">Category</th>
               <th className="py-2 px-2 text-left">Name</th>
               <th className="py-2 px-2 text-left">Price</th>
@@ -161,7 +244,7 @@ const ProductList = ({onEdit}) => {
           <tbody className="text-gray-600 text-sm font-light md:text-lg">
             {filteredProducts.length === 0 ? (
               <tr>
-                <td colSpan="4" className="py-10 text-center text-gray-600">
+                <td colSpan="5" className="py-10 text-center text-gray-600">
                   <div className="flex flex-col items-center">
                     <FaRegSadTear className="text-6xl mb-4" />
                     <p className="text-xl font-bold">No products found</p>
@@ -171,6 +254,7 @@ const ProductList = ({onEdit}) => {
             ) : (
               filteredProducts.map((product) => (
                 <tr key={product.id} className="border-b border-gray-200 hover:bg-gray-100">
+                  <td className="py-2 px-2 md:py-4 text-[10px] md:text-[12px] font-mono break-all">{product.id}</td>
                   <td className="py-2  px-2 md:py-4 text-[12px] ">{product.category}</td>
                   <td className="py-2 px-2">{product.name}</td>
                   <td className="py-2 px-2">{product.price}</td>

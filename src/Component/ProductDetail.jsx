@@ -7,7 +7,7 @@ const ProductDetail = ({detail}) => {
   
   const whatsappOpen = () => {
     const phoneNumber = "6355617070";
-const message = encodeURIComponent(`Hi zara furniture , I am interested in your ${detail.name} product  whose price is ${detail.price}  product and I want to arrange meeting with you.  ` ); // Optional message
+const message = encodeURIComponent(`Hi Luxury Collection, I am interested in product ID: ${detail.id} whose price is ${detail.price}. I want to arrange meeting with you.`); // Optional message
 
     // WhatsApp URL scheme
     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
