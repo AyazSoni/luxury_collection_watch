@@ -103,8 +103,8 @@ const MainProductPage = () => {
         </div>
         <button 
           onClick={() => {
-            const phoneNumber = "6355617070";
-            const message = encodeURIComponent(`Hi Luxury Collection, I am interested in product ID: ${product.id} whose price is ${product.price}. I want to arrange meeting with you.`);
+            const phoneNumber = "6352868656";
+            const message = encodeURIComponent(`Hi Luxury Collection, I’m interested in this watch (Product ID:${product.id}) . Could you share more details of it?`);
             const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
             window.open(whatsappUrl, '_blank');
           }}
