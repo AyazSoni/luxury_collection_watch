@@ -5,8 +5,6 @@ import { useLocation, Link } from 'react-router-dom';
 const Navbar = () => {
     let Links = [
         { name: "HOME", link: "/" },
-        { name: "AboutUs", link: "/AboutUs" },
-        { name: "Shop", link: "/Shop" },
         { name: "ContactUs", link: "/ContactUs" },
         { name: "All Products", link: "/ProductDisplay" },
     ];

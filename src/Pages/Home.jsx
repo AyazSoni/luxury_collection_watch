@@ -2,11 +2,9 @@ import React from 'react';
 import Navbar from '../Component/Navbar.jsx';
 import SlideComponent1 from '../Component/SlideComponent1.jsx';
 import Category from '../Component/Categories.jsx';
-import VideoSection from '../Component/VideoSection.jsx';
 import NewestProduct from '../Component/NewestProduct.jsx';
 import ProductCard from '../Component/ProductCard.jsx';
-import Poster from '../Component/Poster.jsx';
-import WorkProcess from '../Component/workProcess.jsx';
+import TrendingProducts from '../Component/TrendingProducts.jsx';
 import Footer from '../Component/Footer.jsx';
 
 
@@ -18,11 +16,9 @@ const Home = () => {
       <Navbar />
       <SlideComponent1 />
       <Category />
-      <VideoSection />
+      <TrendingProducts />
       <NewestProduct />
       <ProductCard />
-      <Poster />
-      <WorkProcess />
       <Footer />
     </div>
  

@@ -3,8 +3,6 @@
 import React from 'react';
 import {  Routes, Route } from 'react-router-dom';
 import Home from './Pages/Home.jsx';
-import AboutUs from './Pages/AboutUs.jsx';
-import Shop from './Pages/Shop.jsx';
 import ContactUs from './Pages/ContactUs.jsx';
 import ProductDisplay from './Pages/ProductDisplay.jsx';
 import MainProductPage from './Pages/MainProductPage.jsx';
@@ -28,11 +26,9 @@ export default function App() {
         <CategoryProvider>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/AboutUs" element={<AboutUs />} />
-           <Route path="/Shop" element={<Shop />} />
-           <Route path="/ContactUs" element={<ContactUs />} />
-           <Route path="/ProductDisplay" element={<ProductDisplay />}/>
-           <Route path="/MainProductPage/:productId" element={<MainProductPage />} />
+          <Route path="/ContactUs" element={<ContactUs />} />
+          <Route path="/ProductDisplay" element={<ProductDisplay />}/>
+          <Route path="/MainProductPage/:productId" element={<MainProductPage />} />
            
           
           

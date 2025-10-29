@@ -14,8 +14,8 @@ const Footer = () => {
   
   
   const whatsappOpen = () => {
-    const phoneNumber = "6355617070";
-const message = encodeURIComponent('Hi zara Furniture' ); // Optional message
+    const phoneNumber = "6352868656";
+const message = encodeURIComponent('Hi Luxury Collection' ); // Optional message
 
     // WhatsApp URL scheme
     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
@@ -23,12 +23,12 @@ const message = encodeURIComponent('Hi zara Furniture' ); // Optional message
     window.open(whatsappUrl, '_blank');
   }
   const openInstagram = () => {
-    const username = "zara_furniture_surat"; // Your Instagram username or user ID
+    const username = "luxury_collection46"; // Your Instagram username or user ID
     const instagramUrl = `https://www.instagram.com/${username}`;
     window.open(instagramUrl, '_blank');
 }
   const openFacebook = () => {
-    const username = "zara.furniture.777"; // Your Facebook username or user ID
+    const username = "luxury_collection46"; // Your Facebook username or user ID
     const facebookUrl = `https://www.facebook.com/${username}`;
     window.open(facebookUrl, '_blank');
 }
@@ -40,59 +40,119 @@ const message = encodeURIComponent('Hi zara Furniture' ); // Optional message
   }
 
   return (
-    <footer className="bg-[#5a7f75] text-white py-4 px-4 flex flex-col  h-full gap-y-8 md:mt-10 mt-5 overflow-x-hidden md:pt-10 md:gap-y-10 ">
-      <div className='font-bold text-2xl cursor-pointer flex items-center gap-1 w-full ml-3'>
-        <span className="text-2xl thick-font">Luxury Collection</span>
-      </div>
-    <div className="flex flex-col gap-y-2">
-      <div className="flex w-full justify-items-start flex flex-row gap-2 md:ml-5">
-        <MapIcon className="w-8 md:text-2xl text-bgGreen " />
-        <p className="sthick-font md:text-[24px]"> Zara Furniture, Navjivan Cir, Gandhi Kutir, Surat, Gujarat 395017 </p>
-      </div>
-
-      <div className="flex w-full justify-items-start flex flex-row gap-1 ml-[-10px] md:ml-5">
-        <FaPhone className="w-10 mt-1 md:text-2xl text-bgGreen" />
-        <p className="sthick-font md:text-[24px] "> 06355617070 </p>
+    <footer className="bg-[#5a7f75] text-white py-6 px-4 flex flex-col gap-8 md:mt-10 mt-5 overflow-x-hidden md:pt-12 md:gap-12">
+      {/* Brand Section */}
+      <div className='flex flex-col gap-2'>
+        <div className='font-bold text-2xl cursor-pointer'>
+          <span className="text-2xl md:text-3xl thick-font">Luxury Collection</span>
+        </div>
+        <p className="text-neutral-200 text-sm md:text-base max-w-md">
+          Premium watches and eyewear collection. Discover elegance and style with our curated selection.
+        </p>
       </div>
 
-      <div className="flex w-full justify-items-start flex flex-row gap-1 ml-[-10px] md:ml-5">
-        <MdEmail className="w-10  md:text-3xl text-bgGreen text-2xl mt-1" />
-        <p className="sthick-font text-lg md:text-[24px]"> faraazn007@gmail.com </p>
-      </div>
-    </div>
-     <div className="flex flex-row justify-center mt-4 gap-20 md:text-2xl text-xl md:gap-64">
+      {/* Main Content Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
+        {/* Contact Information */}
+        <div className="flex flex-col gap-4">
+          <h1 className="thick-font text-lg md:text-xl mb-2">Contact Us</h1>
+          <div className="flex flex-col gap-4">
+            <div className="flex items-start gap-3">
+              <FaPhone className="w-5 h-5 mt-0.5 text-bgGreen flex-shrink-0" />
+              <a href="tel:+916352868656" className="text-neutral-200 text-sm md:text-base hover:text-white transition-colors">
+                +91 6352 868 656
+              </a>
+            </div>
+            <div className="flex items-start gap-3">
+              <MdEmail className="w-5 h-5 mt-0.5 text-bgGreen flex-shrink-0" />
+              <a href="mailto:tabrezmalek@gmail.com" className="text-neutral-200 text-sm md:text-base hover:text-white transition-colors break-words">
+                tabrezmalek@gmail.com
+              </a>
+            </div>
+          </div>
+        </div>
 
+        {/* Products Section */}
         <div>
-          <h1 className="thick-font text-[14px] pb-2 md:text-[24px]"> Our Products</h1>
-            <div className="grid grid-col md:grid-cols-2 gap-x-3 ">
-           <button onClick={() => Tonav('SOFASET')} className="   text-neutral-300 text-[12px] md:text-[20px] pl-1 text-left"> Sofa </button>
-           <button onClick={() => Tonav('BEDROOM SET')} className=" pl-1  text-neutral-300 text-[12px] md:text-[20px]  text-left"> Bedroom Set</button>
-           <button onClick={() => Tonav('WARDROBE & BED')} className=" pl-1  text-neutral-300 text-[12px] md:text-[20px] text-left"> Wardrobe </button>
-           <button onClick={() => Tonav('MULTIPURPOSE TABLES')} className=" pl-1  text-neutral-300 text-[12px] md:text-[20px] text-left"> Table </button>
-           <button onClick={() => Tonav('TV UNIT')} className=" pl-1  text-neutral-300 text-[12px] md:text-[20px] text-left"> Tv Unit </button>
-           <button onClick={() => Tonav('SINGLE BED')} className=" pl-1  text-neutral-300 text-[12px] md:text-[20px]  text-left"> Single Bed </button>
-           <button onClick={() => Tonav('SOFACOMEBED')} className=" pl-1  text-neutral-300 text-[12px] md:text-[20px]  text-left"> Sofa Comebed </button>
-           <button onClick={() => Tonav('SHOE RACK')} className=" pl-1 thi text-neutral-300 text-[12px] md:text-[20px]  text-left"> Shoe Rack </button>
+          <h1 className="thick-font text-lg md:text-xl mb-4">Our Products</h1>
+          <div className="flex flex-col gap-3">
+            <button 
+              onClick={() => Tonav('TRENDING')} 
+              className="text-neutral-200 text-sm md:text-base text-left hover:text-white transition-colors w-fit"
+            >
+              Trending
+            </button>
+            <button 
+              onClick={() => Tonav("MEN'S WATCH")} 
+              className="text-neutral-200 text-sm md:text-base text-left hover:text-white transition-colors w-fit"
+            >
+              Men's Watch
+            </button>
+            <button 
+              onClick={() => Tonav("WOMEN'S WATCH")} 
+              className="text-neutral-200 text-sm md:text-base text-left hover:text-white transition-colors w-fit"
+            >
+              Women's Watch
+            </button>
+            <button 
+              onClick={() => Tonav('EYEWEAR')} 
+              className="text-neutral-200 text-sm md:text-base text-left hover:text-white transition-colors w-fit"
+            >
+              Stylish Eyewear
+            </button>
+          </div>
         </div>
-        </div>
+
+        {/* Customer Services Section */}
         <div>
-         <h1 className="thick-font text-[14px] pb-2 md:text-[24px]"> Customer Services </h1>
-           <Link to="/ContactUs" className=" pl-1  text-neutral-300 text-[12px] md:text-[20px] block"> Contact Us </Link>
-           <Link  to="/Shop" className=" pl-1  text-neutral-300 text-[12px] md:text-[20px] block"> Visit Our Shop  </Link>
-           <Link to="/AboutUs" className=" pl-1  text-neutral-300 text-[12px] md:text-[20px]"> About Us </Link>
-           <p className="flex flex-row gap-x-7 mt-3 md:text-[20px]">
-             <button onClick={whatsappOpen}> <FaWhatsapp className="text-2xl"/>
-             </button>
-             <button onClick={openInstagram}> <FaInstagram className="text-2xl"/>
-             </button>
-             <button onClick={openFacebook}> <FaFacebook className="text-2xl"/>
-             </button>
-           </p>
+          <h1 className="thick-font text-lg md:text-xl mb-4">Quick Links</h1>
+          <div className="flex flex-col gap-3 mb-4">
+            <Link 
+              to="/ProductDisplay" 
+              className="text-neutral-200 text-sm md:text-base hover:text-white transition-colors w-fit"
+            >
+              All Products
+            </Link>
+            <Link 
+              to="/ContactUs" 
+              className="text-neutral-200 text-sm md:text-base hover:text-white transition-colors w-fit"
+            >
+              Contact Us
+            </Link>
+          </div>
+          
+          {/* Social Media */}
+          <div className="mt-6">
+            <h2 className="thick-font text-base md:text-lg mb-3">Follow Us</h2>
+            <div className="flex gap-4">
+              <button 
+                onClick={whatsappOpen}
+                className="bg-customGreen hover:bg-opacity-80 p-2 rounded-full transition-all transform hover:scale-110"
+                aria-label="WhatsApp"
+              >
+                <FaWhatsapp className="text-lg md:text-xl"/>
+              </button>
+              <button 
+                onClick={openInstagram}
+                className="bg-customGreen hover:bg-opacity-80 p-2 rounded-full transition-all transform hover:scale-110"
+                aria-label="Instagram"
+              >
+                <FaInstagram className="text-lg md:text-xl"/>
+              </button>
+            </div>
+          </div>
         </div>
-     </div>
-     <div className=" w-full text-[13px]  text-center pt-2 border-t-[1.5px] border-[#30574c] border-solid md:text-xl">
-        ©2025 Created by  <b> Ayax Soni</b>
-     </div>
+      </div>
+
+      {/* Copyright Section */}
+      <div className="w-full text-center pt-4 border-t border-[#30574c] border-solid">
+        <p className="text-neutral-300 text-xs md:text-sm">
+          © 2025 Luxury Collection. All rights reserved.
+        </p>
+        <p className="text-neutral-400 text-xs mt-1">
+          Created by <span className="font-semibold">Ayax Soni</span>
+        </p>
+      </div>
     </footer>
   );
 }

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import sofaImg3 from "../Images/sofa3.png.jpg";
+import sofaImg3 from "../Images/rolex-banner-removebg-preview.png";
+import purple_watch from "../Images/banner-3-removebg-preview.png";
 import { useNavigate } from 'react-router-dom';
 import { getCurrentBannerData } from '../Firebase';
 
@@ -33,7 +34,7 @@ const SlideComponent1 = () => {
       buttonText: "Shop Now",
       navigateTo: () => {
         if (bannerData?.productId) {
-          navigate(`/product/${bannerData.productId}`);
+          navigate(`/MainProductPage/${bannerData.productId}`);
         } else {
           navigate('/ProductDisplay');
         }
@@ -42,9 +43,9 @@ const SlideComponent1 = () => {
     // Slide 2 - See Our Collection
     {
       type: "static",
-      text: "OUR WOODEN CONCEPTS",
-      subText: "Sustainable Furniture",
-      description: "Since 2014, we have customized sofas, cupboards, beds, and multipurpose tables (dining, center, computer, TV units). Using the best quality materials at the lowest rates.",
+      text: "OUR WATCH COLLECTION",
+      subText: "Premium  Watches",
+      description: "We offer the best collection of first-copy watches from top brands like Rado, Rolex, Omega, and more. Each watch is carefully chosen for its premium design, quality finish, and authentic feel. From luxury to casual styles, we have something for every look",
       bgColor: "bg-gray-200",
       mainTextColor: "text-customGreen",
       textColor: "text-gray-500",
@@ -58,14 +59,14 @@ const SlideComponent1 = () => {
     {
       type: "static",
       text: "Know More",
-      subText: " About Zara Furniture",
-      description: "Customization Expertise We create durable, long-lasting furniture with a luxurious look at a budget price. Our premium product finish prioritizes comfort and attention to detail.",
+      subText: " About Luxury Collection",
+      description: "We deal in first-copy watches of premium brands like Rado, Rolex, and Omega. Offering stylish designs at affordable prices, we aim to bring luxury within everyone's reach.",
       bgColor: "bg-gray-100",
       mainTextColor: "text-customPurpleDark",
       textColor: "text-customPurpleLight",
       buttonColor: "bg-customPurpleLight",
       buttonTextColor: "text-white",
-      imageSrc: sofaImg3,
+      imageSrc: purple_watch,
       buttonText: "About Us",
       navigateTo: () => navigate('/AboutUs')
     }
@@ -131,8 +132,8 @@ const SlideComponent1 = () => {
 
   // Render static slide with original split layout
   return (
-    <div className={`flex-grow ${bgColor} w-max md:w-full mt-10 md:mt-0 overflow-hidden md:h-[760px] md:h-auto h-[600px]`}>
-      <div className="flex md:flex-row flex-col md:justify-between md:items-center md:px-11 px-6">
+    <div className={`flex-grow ${bgColor} w-full md:w-full mt-10 md:mt-0 overflow-hidden md:h-[760px] md:h-auto h-[600px] relative`}>
+      <div className="flex md:flex-row flex-col md:justify-between md:items-center md:px-11 px-6 overflow-hidden h-full">
         <div className="w-10/12 p-5">
           <h1 className={`md:text-xl font-bold text-left ${textColor} mt-6 mb-2 text-[15px] md:mb-5 ${animate ? 'show' : ''}`}>{text}</h1>
           <p className={`text-left max-w-md md:text-6xl mb-2 font-bold ${mainTextColor} heading md:text-3xl text-2xl md:mb-5 ${animate ? 'slide-in-down' : ''}`}>
@@ -146,30 +147,28 @@ const SlideComponent1 = () => {
             {buttonText}
           </button>
         </div>
-        <div className="md:py-36 z-10 px-1 md:translate-x-[-40px]">
+        <div className="md:py-36 z-10 flex justify-center md:justify-start md:translate-x-[-40px] relative">
+          <div className="absolute rounded-tr-full rounded-tl-full bg-white w-full max-w-[300px] md:w-[0px] md:max-w-none h-[280px] md:h-0 top-[100%] -translate-y-1/2"></div>
           <img
-            className={`max-w-2xl md:w-96 md:h-72 relative md:top-10  p-5 md:p-0 w-72 h-56 bottom-1 md:bottom-0 left-2  ${animate ? 'slide-in-up' : ''}`}
+            className={`max-w-2xl md:w-96 md:h-72 relative md:top-0 md:p-0 w-[250px] h-[250px] z-10 md:left-2  ${animate ? 'slide-in-up' : ''}`}
             src={imageSrc}
             alt="Main furniture image"
           />
         </div>
 
-        <div className={`sticky md:relative rounded-tr-full rounded-tl-full md:top-5 bg-white w-[320px] md:w-[0px] md:rotate-0 md:h-[600px] h-[300px] md:ml-0 md:bottom-0 bottom-[-60px] ${animate ?  'popup-content' : ''}`}>
-      </div>
-
-        <div className={`flex md:flex-col justify-evenly relative bottom-[370px] md:bottom-10 ${animate ? 'slide-in-down' : ''}`}>
+        <div className={`flex flex-row md:flex-col gap-10 md:gap-0 absolute bottom-4 left-0 right-0 justify-center md:absolute md:right-8 md:top-1/2 md:-translate-y-1/2 md:left-auto z-20 ${animate ? 'slide-in-down' : ''}`}>
           {data.map((item, index) => (
           <button
             key={index}
-              className={`relative top-20 w-12 h-12 mb-8 rounded-full right-3 md:right-0 thick-font ${buttonColor} shadow-[0_3px_10px_rgb(0,0,0,0.2)] ${buttonTextColor} ${activeButton === index + 1 ? 'transform scale-110 -translate-y-2 transition-all duration-300 md:translate-x-[-10px] md:translate-y-0' : ''}`}
+              className={`w-12 h-12 md:mb-8 rounded-full thick-font ${buttonColor} shadow-[0_3px_10px_rgb(0,0,0,0.2)] ${buttonTextColor} ${activeButton === index + 1 ? 'transform scale-110 transition-all duration-300 md:translate-x-[-10px]' : ''}`}
             onClick={() => handleClick(index + 1)}
           >
             {index + 1}
           </button>
         ))}
         </div>
-        </div>
       </div>
+    </div>
   );
 };
 

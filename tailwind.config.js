@@ -10,8 +10,8 @@ export default {
         customGreen: '#597D73',
         bgGreen : '#ceddd9',
         customPink: '#EAE1DF',
-        customPurpleLight: '#7781a2',
-        customPurpleDark: '#727583',
+        customPurpleLight: '#103F69',
+        customPurpleDark: '#103F69',
         card1bg: '#F6CECF',
         card2bg: '#CCEBE8',
         card3bg: '#ECECF4',
@@ -22,6 +22,11 @@ export default {
         card8bg: '#fcf0d7',
         card9bg: '#D7FCEC',
         card10bg: '#F5F5F5',
+        // Watch gradient colors
+        watchBrown: '#8B4513',
+        watchGold: '#DAA520',
+        watchWhite: '#FFFFFF',
+        watchCream: '#F5F5DC',
         // Add more colors if needed
       },
       gridTemplateColumns: {
