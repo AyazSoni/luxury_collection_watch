@@ -68,7 +68,7 @@ const SlideComponent1 = () => {
       buttonTextColor: "text-white",
       imageSrc: purple_watch,
       buttonText: "About Us",
-      navigateTo: () => navigate('/AboutUs')
+      navigateTo: () => navigate('/ContactUs')
     }
   ];
 

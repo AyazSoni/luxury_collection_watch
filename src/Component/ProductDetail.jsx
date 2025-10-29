@@ -1,7 +1,5 @@
 import useTextWithReadmore from '../Hooks/TextWithReadmore.jsx';
-import { FaShieldAlt } from "react-icons/fa";
-import { MdLayers } from "react-icons/md";
-import { MdAspectRatio } from "react-icons/md";
+import { SparklesIcon, HeartIcon, ShieldCheckIcon } from '@heroicons/react/24/outline';
 
 const ProductDetail = ({detail}) => {
   /*const { text, toggleShowFullText , ShowFullText} = useTextWithReadmore(detail.description);
@@ -25,6 +23,45 @@ const message = encodeURIComponent(`Hi zara furniture , I am interested in your 
         <span className="sthick-font text-[15px] text-neutral-500 mt-3 md:text-xl">{detail.description}</span>
       )}
 
+      {/* Show feature highlights when no description OR description is very short (less than 20 characters) */}
+      {(!detail.description || detail.description.length === 0 || detail.description.length < 20) && (
+        <div className={`mt-4 md:mt-6 ${detail.description && detail.description.length > 0 ? 'mt-6 md:mt-8' : ''}`}>
+          {/* Elegant Feature Highlights */}
+          <div className="grid grid-cols-3 gap-4 md:gap-6 py-4 md:py-6">
+            <div className="flex flex-col items-center justify-center p-3 md:p-4 bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl border border-gray-200/50">
+              <div className="p-2 md:p-3 bg-gradient-to-br from-customGreen/10 to-customGreen/5 rounded-xl mb-2 md:mb-3">
+                <SparklesIcon className="w-6 h-6 md:w-8 md:h-8 text-customGreen" />
+              </div>
+              <p className="text-[10px] md:text-xs thick-font text-gray-700 text-center leading-tight">Premium Quality</p>
+            </div>
+            
+            <div className="flex flex-col items-center justify-center p-3 md:p-4 bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl border border-gray-200/50">
+              <div className="p-2 md:p-3 bg-gradient-to-br from-customGreen/10 to-customGreen/5 rounded-xl mb-2 md:mb-3">
+                <HeartIcon className="w-6 h-6 md:w-8 md:h-8 text-customGreen" />
+              </div>
+              <p className="text-[10px] md:text-xs thick-font text-gray-700 text-center leading-tight">Elegant Design</p>
+            </div>
+            
+            <div className="flex flex-col items-center justify-center p-3 md:p-4 bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl border border-gray-200/50">
+              <div className="p-2 md:p-3 bg-gradient-to-br from-customGreen/10 to-customGreen/5 rounded-xl mb-2 md:mb-3">
+                <ShieldCheckIcon className="w-6 h-6 md:w-8 md:h-8 text-customGreen" />
+              </div>
+              <p className="text-[10px] md:text-xs thick-font text-gray-700 text-center leading-tight">Authentic</p>
+            </div>
+          </div>
+          
+          {/* Elegant Divider with Text */}
+          <div className="relative my-4 md:my-6">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-gray-200"></div>
+            </div>
+            <div className="relative flex justify-center text-xs md:text-sm">
+              <span className="px-3 md:px-4 bg-white text-gray-400 italic">Discover luxury in every detail</span>
+            </div>
+          </div>
+        </div>
+      )}
+
     {/*  <span onClick={toggleShowFullText} className="text-gray-500 text-[11px] thick-font translate-y-[-7px] ml-1 "> read more </span>*/}
     </div>
     <div class="fixed bottom-0 w-full bg-white   h-16 shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px]  flex flex-row gap-x-[150px] md:gap-x-[180px] justify-center z-30  md:shadow-white md:top-[470px] md:w-[300px] md:ml-3 ">
@@ -39,39 +76,6 @@ const message = encodeURIComponent(`Hi zara furniture , I am interested in your 
       </div>
     </div>
      
-    <div className="flex flex-col gap-7 mb-20 mx-6 mt-10">
-      <div className="flex flex-row">
-        <MdAspectRatio className="text-6xl text-customGreen" />
-        <div className="ml-4 translate-y-2 md:translate-y-0">
-        <p className="thick-font text-gray-500 text-[13px] md:text-2xl"> Dimensions </p>
-        <p className="thick-font text-gray-600 slide-in-up slide-in-up md:text-xl"> {detail.dimensions} </p>
-        </div>
-      </div>
-      
-      <div className="flex flex-row">
-        <FaShieldAlt className="text-6xl text-customGreen" />
-        <div className="ml-4">
-        <p className="thick-font text-gray-500 text-[13px] md:text-2xl"> Warranty </p>
-        <p className="thick-font text-gray-600 text-[14px] slide-in-up md:text-xl">
-            {detail.warranty}
-           </p>
-        </div>
-      </div>  
-         
-      <div className="flex flex-row">
-        <MdLayers className="text-6xl text-customGreen" />
-        <div className="ml-4">
-        <p className="thick-font text-gray-500 text-[13px] md:text-2xl"> Material Use</p>
-        <p className="thick-font text-gray-600 text-[14px] slide-in-up md:text-xl">
-            {detail.primaryMaterial}
-           </p>
-
-  
-     
-        </div>
-      </div>  
-      
-    </div>
     
     </section>
     );
