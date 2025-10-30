@@ -2,7 +2,7 @@
 import React, { createContext, useState, useEffect } from 'react';
 import { auth } from '../Firebase.jsx';
 import { onAuthStateChanged , signOut } from 'firebase/auth';
-import gif from '../Images/cabinet.gif';
+import gif from '../Images/watch.gif';
 
 export const AuthContext = createContext();
 
@@ -30,7 +30,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   if (loading) {
-    return <div className="flex w-full  justify-center h-screen  items-center"><img src={gif} alt="loding" className="w-20 h-20   "/></div> 
+    return <div className="flex w-full  justify-center h-screen  items-center"><img src={gif} alt="loading" className="w-20 h-20"/></div>
   }
 
   return (
