@@ -27,9 +27,9 @@ const SlideComponent1 = () => {
     // Slide 1 - Banner slide (dynamically loaded from admin)
     {
       type: "banner",
-      text: bannerData?.title || "Featured Product",
+      text: bannerData?.title || "",
       subText: "",
-      description: bannerData?.description || "Discover our exclusive collection",
+      description: bannerData?.description || "",
       bgImage: bannerData?.imageUrl || sofaImg3,
       buttonText: "Shop Now",
       navigateTo: () => {
@@ -91,8 +91,7 @@ const SlideComponent1 = () => {
         className="flex-grow w-full mt-10 md:mt-0 overflow-hidden h-[600px] md:h-[760px] relative bg-cover bg-center bg-no-repeat"
         style={{ backgroundImage: `url(${bgImage})` }}
       >
-        {/* Dark overlay gradient - mobile: left to right, desktop: bottom to top */}
-        <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/40 to-transparent md:bg-gradient-to-t md:from-black/80 md:via-black/20 md:to-transparent pointer-events-none"></div>
+        {/* Removed dark overlay to eliminate side shadow on banner */}
 
         <div className="relative z-10 flex flex-col justify-start items-start h-full px-8 pt-28 md:px-11 md:pt-0 md:justify-center pointer-events-none">
           {/* Text content - left-aligned with padding on mobile for modern look */}

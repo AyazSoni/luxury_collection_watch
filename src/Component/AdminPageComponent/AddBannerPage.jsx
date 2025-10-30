@@ -66,15 +66,6 @@ const BannerUpload = () => {
     e.preventDefault();
 
     // Validation
-    if (!title.trim()) {
-      setError('Banner title is required.');
-      return;
-    }
-
-    if (!description.trim()) {
-      setError('Banner description is required.');
-      return;
-    }
 
     if (!selectedFile && !currentBanner) {
       setError('Please select a banner image.');
@@ -145,7 +136,7 @@ return (
               {/* Title Input */}
               <div>
                 <label className="block text-lg font-medium text-gray-700 mb-2">
-                  Banner Title <span className="text-red-500">*</span>
+                  Banner Title <span className="text-gray-500 text-sm">(Optional)</span>
                 </label>
                 <input
                   type="text"
@@ -153,14 +144,13 @@ return (
                   onChange={(e) => setTitle(e.target.value)}
                   className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                   placeholder="Enter banner title"
-                  required
                 />
               </div>
 
               {/* Description Input */}
               <div>
                 <label className="block text-lg font-medium text-gray-700 mb-2">
-                  Banner Description <span className="text-red-500">*</span>
+                  Banner Description <span className="text-gray-500 text-sm">(Optional)</span>
                 </label>
                 <textarea
                   value={description}
@@ -168,7 +158,6 @@ return (
                   className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                   placeholder="Enter banner description"
                   rows="3"
-                  required
                 ></textarea>
               </div>
 
