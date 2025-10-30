@@ -45,7 +45,7 @@ const SlideComponent1 = () => {
       type: "static",
       text: "OUR WATCH COLLECTION",
       subText: "Premium  Watches",
-      description: "We offer the best collection of first-copy watches from top brands like Rado, Rolex, Omega, and more. Each watch is carefully chosen for its premium design, quality finish, and authentic feel. From luxury to casual styles, we have something for every look",
+      description: "We offer a premium collection of first-copy watches from top brands like Rado, Rolex, and Omega. Each piece is chosen for its quality design, fine finish, and authentic feel—perfect for both luxury and casual styles.I prefer this response",
       bgColor: "bg-gray-200",
       mainTextColor: "text-customGreen",
       textColor: "text-gray-500",

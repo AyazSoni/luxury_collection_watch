@@ -32,7 +32,7 @@ const ProductPageHead = () => {
       
       {/* White Background Section with Category Icons */}
       <div className="w-full bg-white py-8 mt-4 md:mt-4 relative z-20">
-        <div className="flex justify-center items-center gap-4 md:gap-8 overflow-x-auto pb-4 relative z-30" style={{ paddingLeft: '100px', paddingRight: '24px' }}>
+        <div className="flex justify-start md:justify-center items-center gap-4 md:gap-8 overflow-x-auto overflow-y-visible pb-4 pt-2 pl-4 pr-6 md:pl-[100px] md:pr-6 relative z-30">
           {[
             { category: null, Icon: FaThLarge, label: 'All' },
             { category: 'trending', Icon: HiFire, label: 'Trending' },
@@ -59,9 +59,9 @@ const ProductPageHead = () => {
                 <Icon className={`text-3xl md:text-4xl ${isActive(category) ? 'text-white' : 'text-gray-700'}`} />
               </div>
               <h4 className={`
-                text-xs md:text-sm thick-font whitespace-nowrap text-center
+                text-xs md:text-sm thick-font whitespace-nowrap text-center h-5 md:h-6
                 transition-colors duration-300
-                ${isActive(category) ? 'text-indigo-600 font-bold' : 'text-gray-600'}
+                ${isActive(category) ? 'text-indigo-600' : 'text-gray-600'}
               `}>
                 {label}
               </h4>
