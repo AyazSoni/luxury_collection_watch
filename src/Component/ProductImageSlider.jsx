@@ -44,20 +44,24 @@ const ProductImageSlider = React.memo(({ slides }) => {
         <swiper-container pagination="true">
           {memoizedSlides.map((slide, index) => (
             <swiper-slide key={index}>
-              <button onClick={() => openPhoto(slide)}>
-                <img 
-                  src={slide} 
-                  alt={`Slide ${index + 1}`} 
-                  className="w-full max-h-[400px] md:h-[550px] min-h-[250px]"
-                  loading="lazy" // FIXED: Add lazy loading
-                />
+              <button onClick={() => openPhoto(slide)} className="block w-full">
+                <div className="w-full aspect-[4/5] md:aspect-[9/11] overflow-hidden">
+                  <img 
+                    src={slide} 
+                    alt={`Slide ${index + 1}`} 
+                    className="w-full h-full object-cover block"
+                    loading="lazy"
+                  />
+                </div>
               </button>
             </swiper-slide>
           ))}
         </swiper-container>
       ) : (
-        <div>
-          <img src={noImage} className="w-full h-[400px] md:h-[550px]" />
+        <div className="w-full">
+          <div className="w-full aspect-[4/5] md:aspect-[9/11] overflow-hidden">
+            <img src={noImage} className="w-full h-full object-cover block" />
+          </div>
         </div>
       )}
 
