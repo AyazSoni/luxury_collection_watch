@@ -14,7 +14,7 @@ const TrendingProducts = () => {
       <div className="h-1 w-20 rounded-2xl bg-gradient-to-r from-orange-400 to-pink-400 mx-auto mb-8"></div>
           
       <div className="flex items-center justify-center">
-        <div className="grid grid-cols-1 gap-5 w-full max-w-screen-sm">
+        <div className="grid grid-cols-1 gap-5 w-full max-w-screen-sm justify-items-center">
           {trendingProducts.length > 0 ? (
             trendingProducts.map((product) => (
               <CardFurniture key={product.id} product={product} />

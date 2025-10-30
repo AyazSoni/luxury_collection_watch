@@ -26,7 +26,7 @@ const CardFurniture = ({ product }) => {
 
   return (
     <section ref={ref} className="p-10 grid">
-      <div className={`w-72 min-h-[380px] max-h-[480px] shadow-2xl rounded-3xl p-5 transition-shadow flex flex-col
+      <div className={`w-72 min-h-[380px] max-h-[480px] shadow-2xl rounded-3xl p-5 transition-shadow flex flex-col mx-auto
             ${inView ? 'main shadow-[rgb(167,205,246)_0px_0px_16px]' : 'default shadow-[rgb(207,229,252,_0.95)_0px_0px_16px]'}`}>
         <img 
           className="w-full h-56 rounded-2xl mx-auto transition-opacity duration-300 flex-shrink-0" 

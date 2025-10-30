@@ -53,7 +53,7 @@ const ProductDisplay = () => {
         <div className="text-red-500 text-center p-4">{error}</div>
       ) : (
         <>
-          <div className="grid grid-cols-1 md:grid-cols-2 md:p-10 md:gap-5 md:ml-8 transition-all duration-300 ease-in-out">
+          <div className="grid grid-cols-1 md:grid-cols-2 md:p-10 md:gap-5 justify-items-center transition-all duration-300 ease-in-out">
             {filteredProducts.length !== 0 ? (
               filteredProducts.map((product) => (
                 <CardFurniture key={product.id} product={product} />
